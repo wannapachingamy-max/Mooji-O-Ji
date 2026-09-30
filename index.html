@@ -100,7 +100,7 @@
                 </button>
             </nav>
 
-            <!-- Right Controls: Status & Admin Gear Button -->
+            <!-- Right Controls: Status -->
             <div class="flex items-center space-x-3">
                 <div class="hidden sm:flex items-center space-x-2 bg-emerald-100/80 border border-emerald-200 px-3 py-1.5 rounded-full">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -158,7 +158,7 @@
                 </div>
             </section>
 
-            <!-- 1. Portfolio Section (ผลงาน) -->
+            <!-- 1. Portfolio Section -->
             <div id="section-portfolio" class="content-section space-y-6">
                 <div class="flex items-center justify-between">
                     <div>
@@ -187,7 +187,7 @@
                 </div>
             </div>
 
-            <!-- 2. Pricing Section (เรทราคา - โหลดจาก Google Sheets) -->
+            <!-- 2. Pricing Section -->
             <div id="section-pricing" class="content-section hidden space-y-6">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-800 flex items-center">
@@ -197,7 +197,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="pricing-container">
-                    <!-- Rendered from Sheets -->
                     <div class="glass-card rounded-3xl p-6 text-center text-slate-400">กำลังโหลดเรทราคาจาก Google Sheets...</div>
                 </div>
 
@@ -212,7 +211,7 @@
                 </div>
             </div>
 
-            <!-- 3. Queue Section (เช็คคิว - โหลดจาก Google Sheets) -->
+            <!-- 3. Queue Section -->
             <div id="section-queue" class="content-section hidden space-y-6">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-800 flex items-center">
@@ -290,7 +289,7 @@
                 </div>
             </div>
 
-            <!-- 5. Contact & Brief Section (ส่งข้อมูลเข้า Google Sheets โดยตรง) -->
+            <!-- 5. Contact & Brief Section -->
             <div id="section-contact" class="content-section hidden space-y-6">
                 <div>
                     <h3 class="text-2xl font-bold text-slate-800 flex items-center">
@@ -299,7 +298,6 @@
                     <p class="text-xs text-slate-500 mt-0.5">กรอกฟอร์มด้านล่าง ข้อมูลจะถูกส่งตรงเข้า Google Sheets ของร้านทันที!</p>
                 </div>
 
-                <!-- Quick Brief Form Card -->
                 <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-md">
                     <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
                         <i class="fa-solid fa-message text-pink-400 mr-2"></i> ฟอร์มส่งบรีฟงานเข้า Google Sheets
@@ -344,17 +342,17 @@
 
     </div>
 
-    <!-- SCRIPT CONNECTIONS WITH GOOGLE SHEETS -->
+    <!-- SCRIPT CONNECTIONS WITH NEW GOOGLE SHEETS URL -->
     <script>
-        // ใส่ Web App URL ของคุณที่นี่เรียบร้อยแล้ว
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxHfyuJdkaQSCcYWIG4onRsd7IfwCZBvDN-pIt33FyQoFIbrWk8wxBM21dtfhoezHJF-A/exec';
+        // อัปเดต Web App URL ใหม่ของคุณเรียบร้อยแล้ว
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbytLgx5Uec-vFvKuhNo2VYYgA5npU6A907IUDvZ8lL7ksqBVV0R5zV6IueOhQdAsyn7bQ/exec';
 
         let appData = {
             queues: [],
             pricing: []
         };
 
-        // 1. ฟังก์ชันดึงข้อมูลจาก Google Sheets (โหลดตอนเปิดเว็บ)
+        // 1. ฟังก์ชันดึงข้อมูลจาก Google Sheets
         async function fetchGoogleSheetData() {
             try {
                 const response = await fetch(WEB_APP_URL + '?action=getData');
@@ -441,7 +439,7 @@
             container.innerHTML = html;
         }
 
-        // 4. ฟังก์ชันส่งข้อมูลบรีฟจากหน้าเว็บเข้าชีต Briefs
+        // 4. ฟังก์ชันส่งข้อมูลบรีฟเข้าชีต
         async function submitBriefToSheet() {
             const name = document.getElementById('brief-name').value.trim();
             const type = document.getElementById('brief-type').value;
@@ -467,7 +465,6 @@
                 statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> ส่งบรีฟเข้า Google Sheets สำเร็จแล้ว!';
                 statusEl.className = 'text-xs text-emerald-600 font-semibold opacity-100';
                 
-                // ล้างฟอร์ม
                 document.getElementById('brief-name').value = '';
                 document.getElementById('brief-details').value = '';
             } catch (error) {
