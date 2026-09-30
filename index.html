@@ -1,400 +1,499 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th" class="h-full">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1024">
-    <title>MistyStar Portfolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MistyStar Portfolio & Commission Hub</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Prompt -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Prompt', 'sans-serif'],
+                    },
+                    colors: {
+                        pastelBlue: '#E0F2FE',
+                        pastelPink: '#FCE7F3',
+                        pastelPurple: '#F3E8FF',
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --bg-gradient: linear-gradient(135deg, #e0f2fe 0%, #fae8ff 100%);
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --text-color: #4b5563;
-            --primary-color: #ec4899;
-            --secondary-color: #38bdf8;
-            --border-color: rgba(255, 255, 255, 0.6);
-        }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: var(--bg-gradient);
+            font-family: 'Prompt', sans-serif;
+            background: linear-gradient(135deg, #E0F7FA 0%, #E1F5FE 35%, #FCE4EC 70%, #F8BBD0 100%);
             background-attachment: fixed;
-            color: var(--text-color);
-            min-width: 1024px;
+            min-height: 100vh;
         }
-
-        header {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
+        .glass-card {
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
         }
-
-        header h1 {
-            margin: 0;
-            font-size: 24px;
-            color: #db2777;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.9);
         }
-
-        nav button {
-            background: #fff;
-            color: #db2777;
-            border: 1px solid #f472b6;
-            padding: 8px 18px;
-            margin-left: 8px;
-            cursor: pointer;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-
-        nav button:hover, nav button.active {
-            background: #ec4899;
-            color: #fff;
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.3);
         }
-
-        .container {
-            max-width: 960px;
-            margin: 30px auto;
-            padding: 0 20px;
+        ::-webkit-scrollbar-thumb {
+            background: rgba(244, 114, 182, 0.4);
+            border-radius: 4px;
         }
-
-        .section {
-            display: none;
-        }
-
-        .section.active {
-            display: block;
-        }
-
-        h2 {
-            color: #be185d;
-            border-bottom: 2px dashed #f472b6;
-            padding-bottom: 8px;
-            margin-top: 0;
-        }
-
-        /* Queue Summary Box */
-        .queue-summary {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        .summary-card {
-            flex: 1;
-            background: var(--card-bg);
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-        .summary-card h3 { margin: 0 0 5px 0; font-size: 14px; color: #6b7280; }
-        .summary-card p { margin: 0; font-size: 24px; font-weight: bold; color: #db2777; }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-            backdrop-filter: blur(5px);
-        }
-
-        .card img {
-            width: 100%;
-            height: 140px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: #f3f4f6;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background: var(--card-bg);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-        }
-
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        th {
-            background: rgba(244, 114, 182, 0.15);
-            color: #be185d;
-        }
-
-        .rules-box {
-            background: var(--card-bg);
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            line-height: 1.6;
-        }
-
-        .contact-footer {
-            margin-top: 30px;
-            text-align: center;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.4);
-            border-radius: 12px;
-        }
-
-        .contact-footer a {
-            color: #db2777;
-            text-decoration: none;
-            font-weight: bold;
-            margin: 0 10px;
-        }
-
-        .admin-toggle {
-            background: #9ca3af !important;
-            color: #fff !important;
-            border: none !important;
-        }
-
-        .admin-panel {
-            background: rgba(255,255,255,0.9);
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 12px;
-            border: 1px solid #f472b6;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 8px;
-            margin: 5px 0 12px 0;
-            background: #fff;
-            border: 1px solid #cbd5e1;
-            border-radius: 6px;
-            box-sizing: border-box;
-        }
-
-        button.action-btn {
-            background: #ec4899;
-            color: #fff;
-            font-weight: bold;
-            border: none;
-            padding: 10px;
-            cursor: pointer;
-            border-radius: 6px;
-            width: 100%;
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(244, 114, 182, 0.7);
         }
     </style>
 </head>
-<body>
+<body class="text-slate-700 antialiased selection:bg-pink-200 selection:text-pink-800 flex flex-col items-center justify-start p-2 sm:p-4 lg:p-6">
 
-    <header>
-        <h1>✨ MistyStar Portfolio ✨</h1>
-        <nav>
-            <button onclick="switchTab('portfolio')" id="btn-portfolio" class="active">ผลงาน</button>
-            <button onclick="switchTab('pricing')" id="btn-pricing">เรทราคา</button>
-            <button onclick="switchTab('queues')" id="btn-queues">เช็คคิว</button>
-            <button onclick="switchTab('rules')" id="btn-rules">กฎการใช้งาน</button>
-            <button onclick="toggleAdmin()" class="admin-toggle">Admin</button>
-        </nav>
-    </header>
+    <!-- Container -->
+    <div class="w-full max-w-[1280px] min-h-[768px] glass-card rounded-3xl overflow-hidden flex flex-col shadow-2xl relative border-2 border-white/80 my-auto">
 
-    <div class="container">
-        <!-- Admin Panel -->
-        <div id="adminControls" class="admin-panel" style="display:none;">
-            <h3>🛠️ Admin Management Panel</h3>
-            <div id="loginBox">
-                <input type="password" id="adminPass" placeholder="Password (1234)">
-                <button class="action-btn" onclick="checkAdmin()">Login</button>
-            </div>
-            <div id="manageBox" style="display:none;">
-                <p style="color: #059669; font-weight:bold;">✅ Logged in</p>
-                <select id="targetSheet">
-                    <option value="portfolio">Portfolio</option>
-                    <option value="pricing">Pricing</option>
-                    <option value="queues">Queue</option>
-                </select>
-                <input type="text" id="addItemTitle" placeholder="Title / Name">
-                <input type="text" id="addItemCategory" placeholder="Category / Detail">
-                <input type="text" id="addItemImg" placeholder="Image URL / Filename">
-                <textarea id="addItemDesc" placeholder="Description / Price / Status"></textarea>
-                <button class="action-btn" onclick="addNewItem()">Add to Sheet</button>
-            </div>
-        </div>
-
-        <!-- Portfolio Section -->
-        <div id="portfolio" class="section active">
-            <h2>ผลงานทั้งหมด</h2>
-            <div id="portfolioGrid" class="grid">กำลังโหลดข้อมูล...</div>
-        </div>
-
-        <!-- Pricing Section -->
-        <div id="pricing" class="section">
-            <h2>เรทราคาค่าบริการ</h2>
-            <div id="pricingGrid" class="grid">กำลังโหลดข้อมูล...</div>
-        </div>
-
-        <!-- Queue Section -->
-        <div id="queues" class="section">
-            <h2>สถานะคิวงาน</h2>
-            <div class="queue-summary">
-                <div class="summary-card">
-                    <h3>คิวเดือนนี้ทั้งหมด</h3>
-                    <p id="totalQueueCount">0</p>
+        <!-- Top Navigation Bar -->
+        <header class="glass-nav px-6 py-4 flex items-center justify-between sticky top-0 z-50">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-300 to-sky-300 flex items-center justify-center text-white shadow-md">
+                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
                 </div>
-                <div class="summary-card">
-                    <h3>คิวว่างเดือนนี้</h3>
-                    <p id="freeQueueCount">0</p>
+                <div>
+                    <h1 class="font-bold text-lg text-slate-800 leading-tight">MistyStar Portfolio</h1>
+                    <p class="text-xs text-slate-500">Commission & Creative Showcase</p>
                 </div>
             </div>
-            <div id="queueContainer">กำลังโหลดข้อมูล...</div>
-        </div>
 
-        <!-- Rules Section -->
-        <div id="rules" class="section">
-            <h2>กฎการใช้งาน & ข้อตกลง</h2>
-            <div class="rules-box">
-                <p>1. กรุณาแจ้งรายละเอียดบรีฟงานให้ครบถ้วนก่อนเริ่มงาน</p>
-                <p>2. สามารถแก้ไของค์ประกอบหลักได้ฟรี 2 ครั้ง หากเกินกว่านั้นมีค่าใช้จ่ายเพิ่มเติม</p>
-                <p>3. ไม่อนุญาตให้นำผลงานไปใช้ในเชิงพาณิชย์เว้นแต่จะตกลงกันไว้ล่วงหน้า</p>
-                <p>4. ชำระเงินเต็มจำนวนหรือมัดจำ 50% ก่อนเริ่มลงมือทำคิวงาน</p>
+            <!-- Navigation Tabs -->
+            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 bg-white/50 p-1.5 rounded-full border border-white/60 shadow-inner">
+                <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-white text-pink-600 shadow-sm">
+                    <i class="fa-solid fa-images mr-1.5"></i> ผลงาน
+                </button>
+                <button onclick="switchTab('pricing')" id="nav-pricing" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
+                    <i class="fa-solid fa-tag mr-1.5"></i> เรทราคา
+                </button>
+                <button onclick="switchTab('queue')" id="nav-queue" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
+                    <i class="fa-solid fa-calendar-check mr-1.5"></i> เช็คคิว
+                </button>
+                <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
+                    <i class="fa-solid fa-book-open mr-1.5"></i> กฎการใช้งาน
+                </button>
+                <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
+                    <i class="fa-solid fa-paper-plane mr-1.5"></i> ช่องทางติดต่อ
+                </button>
+            </nav>
+
+            <!-- Right Controls: Status & Admin Gear Button -->
+            <div class="flex items-center space-x-3">
+                <div class="hidden sm:flex items-center space-x-2 bg-emerald-100/80 border border-emerald-200 px-3 py-1.5 rounded-full">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="text-xs font-semibold text-emerald-700">Status: OPEN</span>
+                </div>
             </div>
+        </header>
+
+        <!-- Mobile Hamburger Bar -->
+        <div class="md:hidden flex overflow-x-auto space-x-2 p-3 bg-white/40 border-b border-white/60">
+            <button onclick="switchTab('portfolio')" id="mob-nav-portfolio" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white text-pink-600 shadow-sm">ผลงาน</button>
+            <button onclick="switchTab('pricing')" id="mob-nav-pricing" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">เรทราคา</button>
+            <button onclick="switchTab('queue')" id="mob-nav-queue" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">เช็คคิว</button>
+            <button onclick="switchTab('rules')" id="mob-nav-rules" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">กฎการใช้งาน</button>
+            <button onclick="switchTab('contact')" id="mob-nav-contact" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">ติดต่อ</button>
         </div>
 
-        <!-- Contact Footer -->
-        <div class="contact-footer">
-            <span>ช่องทางการติดต่อ:</span>
-            <a href="https://twitter.com" target="_blank">Twitter / X</a>
-            <a href="https://line.me" target="_blank">Line OA</a>
-            <a href="https://instagram.com" target="_blank">Instagram</a>
-        </div>
+        <!-- Main Scrollable Content Area -->
+        <main class="flex-1 overflow-y-auto p-6 lg:p-8 space-y-8">
+
+            <!-- Hero Banner Section -->
+            <section class="glass-card rounded-3xl p-6 lg:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between border border-white/80 shadow-lg">
+                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-pink-200/40 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -left-16 -top-16 w-64 h-64 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="z-10 max-w-xl text-center md:text-left mb-6 md:mb-0">
+                    <span class="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-600 text-xs font-semibold mb-3 tracking-wide">
+                        ✨ Welcome to My Creative Space ✨
+                    </span>
+                    <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-3 tracking-tight">
+                        Transforming Imagination into Pastel Artistry
+                    </h2>
+                    <p class="text-slate-600 text-sm lg:text-base leading-relaxed mb-6">
+                        ยินดีต้อนรับเข้าสู่เว็บไซต์รวบรวมผลงานและรับวาดภาพคอมมิชชั่น สไตล์ละมุน ฟีลกู๊ด โทนสีพาสเทลสดใส พร้อมเนรมิตจินตนาการของคุณให้ออกมาเป็นจริงแล้ววันนี้!
+                    </p>
+                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+                        <button onclick="switchTab('pricing')" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-medium text-sm shadow-md hover:opacity-90 transition-all transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-sparkles mr-2"></i> ดูเรทราคาเลย
+                        </button>
+                        <button onclick="switchTab('queue')" class="px-6 py-2.5 rounded-2xl bg-white/80 border border-white text-slate-700 font-medium text-sm shadow-sm hover:bg-white transition-all">
+                            <i class="fa-solid fa-calendar-days mr-2"></i> เช็คคิวงาน
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Shop Profile Avatar -->
+                <div class="z-10 flex flex-col items-center">
+                    <div class="relative w-36 h-36 lg:w-44 lg:h-44 rounded-full p-1.5 bg-gradient-to-tr from-sky-300 via-purple-300 to-pink-300 shadow-xl">
+                        <img src="https://placehold.co/300x300/fbcfe8/db2777?text=Misty+Star" alt="Shop Avatar" class="w-full h-full object-cover rounded-full bg-white">
+                    </div>
+                    <div class="mt-3 text-center">
+                        <h3 class="font-bold text-slate-800 text-base">@MistyStar_Art</h3>
+                        <p class="text-xs text-slate-500">Illustrator & Graphic Designer</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 1. Portfolio Section (ผลงาน) -->
+            <div id="section-portfolio" class="content-section space-y-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold text-slate-800 flex items-center">
+                            <i class="fa-solid fa-images text-pink-400 mr-2.5"></i> ผลงานที่ผ่านมา (Portfolio)
+                        </h3>
+                        <p class="text-xs text-slate-500 mt-0.5">รวมผลงานตัวอย่างลายเส้นและโทนสีต่างๆ</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="portfolio-grid">
+                    <div class="glass-card rounded-3xl overflow-hidden border border-white/80 shadow-sm bg-white/60">
+                        <img src="https://placehold.co/600x400/e0f2fe/0284c7?text=Chibi+Dream" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-slate-800 text-sm">Sweet Dream Chibi Set</h4>
+                            <p class="text-xs text-slate-500 mt-1">งานวาดสไตล์จิบิ น่ารักสดใส</p>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-3xl overflow-hidden border border-white/80 shadow-sm bg-white/60">
+                        <img src="https://placehold.co/600x400/fce7f3/db2777?text=Bust-Up" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h4 class="font-bold text-slate-800 text-sm">Magical Princess</h4>
+                            <p class="text-xs text-slate-500 mt-1">ภาพครึ่งตัวเน้นดีเทลชุด</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Pricing Section (เรทราคา - โหลดจาก Google Sheets) -->
+            <div id="section-pricing" class="content-section hidden space-y-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-tags text-pink-400 mr-2.5"></i> เรทราคาคอมมิชชั่น (Pricing Rates)
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">ข้อมูลซิงค์ตรงจาก Google Sheets อัปเดตราคาอัตโนมัติ</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="pricing-container">
+                    <!-- Rendered from Sheets -->
+                    <div class="glass-card rounded-3xl p-6 text-center text-slate-400">กำลังโหลดเรทราคาจาก Google Sheets...</div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 border border-white/80 bg-white/40 flex flex-col md:flex-row items-center justify-between text-xs text-slate-600">
+                    <div class="flex items-center space-x-3 mb-3 md:mb-0">
+                        <i class="fa-solid fa-circle-info text-pink-500 text-xl"></i>
+                        <div>
+                            <span class="font-bold text-slate-800">รายละเอียดเพิ่มเติม / Add-ons:</span> เพิ่มตัวละคร +100%, พร็อพชิ้นใหญ่ +100-300 บาท, เชิงพาณิชย์ x2
+                        </div>
+                    </div>
+                    <button onclick="switchTab('queue')" class="px-4 py-2 rounded-xl bg-white text-pink-600 font-bold shadow-sm hover:bg-pink-50">ตรวจสอบคิวก่อนจอง</button>
+                </div>
+            </div>
+
+            <!-- 3. Queue Section (เช็คคิว - โหลดจาก Google Sheets) -->
+            <div id="section-queue" class="content-section hidden space-y-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-calendar-check text-pink-400 mr-2.5"></i> ตารางเช็คคิวงาน (Queue Status)
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">ดึงข้อมูลสถานะคิวล่าสุดแบบเรียลไทม์จาก Google Sheets</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="glass-card rounded-3xl p-6 border-2 border-sky-200 flex items-center justify-between bg-gradient-to-r from-sky-50/80 to-white">
+                        <div>
+                            <span class="text-xs font-semibold text-sky-600 uppercase tracking-wider">คิวทั้งหมดในระบบ</span>
+                            <div class="text-4xl font-extrabold text-slate-800 mt-1" id="stat-total-slots">0 <span class="text-sm font-normal text-slate-500">คิว</span></div>
+                        </div>
+                        <div class="w-16 h-16 rounded-2xl bg-sky-200/70 flex items-center justify-center text-sky-700 text-2xl shadow-inner"><i class="fa-solid fa-calendar-days"></i></div>
+                    </div>
+
+                    <div class="glass-card rounded-3xl p-6 border-2 border-pink-200 flex items-center justify-between bg-gradient-to-r from-pink-50/80 to-white">
+                        <div>
+                            <span class="text-xs font-semibold text-pink-600 uppercase tracking-wider">คิวว่าง (Available Slots)</span>
+                            <div class="text-4xl font-extrabold text-pink-600 mt-1" id="stat-available-slots">0 <span class="text-sm font-normal text-slate-500">คิว</span></div>
+                        </div>
+                        <div class="w-16 h-16 rounded-2xl bg-pink-200/70 flex items-center justify-center text-pink-700 text-2xl shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm">
+                    <h4 class="font-bold text-slate-800 text-sm mb-4 flex items-center justify-between">
+                        <span>รายชื่อคิวปัจจุบัน (Current Queue List)</span>
+                        <span class="text-xs font-normal text-slate-500" id="queue-count-summary">กำลังโหลดข้อมูล...</span>
+                    </h4>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-xs">
+                            <thead>
+                                <tr class="border-b border-white/80 text-slate-500">
+                                    <th class="py-3 px-4 font-semibold">คิวที่</th>
+                                    <th class="py-3 px-4 font-semibold">ชื่อผู้จอง (Client)</th>
+                                    <th class="py-3 px-4 font-semibold">ประเภทงาน</th>
+                                    <th class="py-3 px-4 font-semibold">สถานะงาน</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-white/40 text-slate-700" id="queue-table-body">
+                                <tr><td colspan="4" class="py-4 text-center text-slate-400">กำลังเชื่อมต่อ Google Sheets...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Rules Section -->
+            <div id="section-rules" class="content-section hidden space-y-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-book-open text-pink-400 mr-2.5"></i> กฎการใช้งานและข้อตกลง (Terms & Rules)
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">โปรดอ่านและทำความเข้าใจก่อนทำการบรีฟและจองคิวคอมมิชชั่นนะคะ</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-2xl bg-sky-100 flex-shrink-0 flex items-center justify-center text-sky-600 font-bold text-sm">01</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">ลิขสิทธิ์และการใช้งาน (Copyright)</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">งานคอมมิชชั่นใช้สำหรับส่วนตัวเท่านั้น หากใช้เชิงพาณิชย์แจ้งล่วงหน้า (ราคา x2)</p>
+                        </div>
+                    </div>
+                    <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-2xl bg-pink-100 flex-shrink-0 flex items-center justify-center text-pink-600 font-bold text-sm">02</div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm mb-1">ขั้นตอนการชำระเงิน (Payment)</h4>
+                            <p class="text-xs text-slate-600 leading-relaxed">ชำระเต็มจำนวนหรือมัดจำ 50% ก่อนเริ่มงาน ไม่คืนเงินทุกกรณีหลังร่างภาพ</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Contact & Brief Section (ส่งข้อมูลเข้า Google Sheets โดยตรง) -->
+            <div id="section-contact" class="content-section hidden space-y-6">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
+                        <i class="fa-solid fa-paper-plane text-pink-400 mr-2.5"></i> ช่องทางติดต่อและส่งบรีฟงาน
+                    </h3>
+                    <p class="text-xs text-slate-500 mt-0.5">กรอกฟอร์มด้านล่าง ข้อมูลจะถูกส่งตรงเข้า Google Sheets ของร้านทันที!</p>
+                </div>
+
+                <!-- Quick Brief Form Card -->
+                <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-md">
+                    <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
+                        <i class="fa-solid fa-message text-pink-400 mr-2"></i> ฟอร์มส่งบรีฟงานเข้า Google Sheets
+                    </h4>
+                    <p class="text-xs text-slate-500 mb-4">กรอกรายละเอียดให้ครบถ้วนแล้วกดส่งข้อมูลได้เลยค่ะ</p>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">ชื่อเล่นลูกค้า / นามปากกา:</label>
+                            <input type="text" id="brief-name" placeholder="เช่น คุณน้ำ หรือ Misty" class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300">
+                        </div>
+                        <div>
+                            <label class="block font-semibold text-slate-700 mb-1">รูปแบบที่ต้องการจอง:</label>
+                            <select id="brief-type" class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300">
+                                <option value="จิบิ (Chibi)">จิบิ (Chibi Style)</option>
+                                <option value="ครึ่งตัว (Bust-up)">ครึ่งตัว (Bust-up)</option>
+                                <option value="เต็มตัว (Full Body)">เต็มตัว (Full Body)</option>
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="block font-semibold text-slate-700 mb-1">รายละเอียดตัวละคร / เรฟเฟอเรนซ์:</label>
+                            <textarea id="brief-details" rows="3" placeholder="ระบุสีผม สีตา ท่าทาง หรือลิงก์รูปภาพตัวละคร..." class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 flex items-center justify-between">
+                        <span id="submit-status" class="text-xs font-semibold opacity-0 transition-opacity"></span>
+                        <button onclick="submitBriefToSheet()" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-semibold text-xs shadow-md hover:opacity-90 transition-all flex items-center">
+                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> ส่งบรีฟเข้า Google Sheets
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Footer -->
+        <footer class="glass-nav px-6 py-3 text-center text-xs text-slate-500 flex items-center justify-between">
+            <p>© 2026 MistyStar Portfolio. All rights reserved.</p>
+            <div class="flex space-x-4"><a href="#" class="hover:text-pink-600">Privacy</a><a href="#" class="hover:text-pink-600">Terms</a></div>
+        </footer>
+
     </div>
 
+    <!-- SCRIPT CONNECTIONS WITH GOOGLE SHEETS -->
     <script>
-        const scriptURL = 'https://script.google.com/macros/s/AKfycbxHfyuJdkaQSCcYWIG4onRsd7IfwCZBvDN-pIt33FyQoFIbrWk8wxBM21dtfhoezHJF-A/exec';
-        let appData = { portfolio: [], pricing: [], queues: [] };
+        // ใส่ Web App URL ของคุณที่นี่เรียบร้อยแล้ว
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbxHfyuJdkaQSCcYWIG4onRsd7IfwCZBvDN-pIt33FyQoFIbrWk8wxBM21dtfhoezHJF-A/exec';
 
-        async function loadData() {
+        let appData = {
+            queues: [],
+            pricing: []
+        };
+
+        // 1. ฟังก์ชันดึงข้อมูลจาก Google Sheets (โหลดตอนเปิดเว็บ)
+        async function fetchGoogleSheetData() {
             try {
-                let response = await fetch(`${scriptURL}?action=getAll`);
-                appData = await response.json();
-                renderPortfolio();
-                renderPricing();
-                renderQueues();
+                const response = await fetch(WEB_APP_URL + '?action=getData');
+                const data = await response.json();
+                if (data.queues) appData.queues = data.queues;
+                if (data.pricing) appData.pricing = data.pricing;
+                
+                renderQueueData();
+                renderPricingData();
             } catch (error) {
-                console.error('Error:', error);
+                console.error('ไม่สามารถดึงข้อมูลจาก Google Sheets ได้:', error);
             }
         }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('nav button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            if(event && event.target) event.target.classList.add('active');
-        }
+        // 2. เรนเดอร์ตารางคิวงาน
+        function renderQueueData() {
+            const tbody = document.getElementById('queue-table-body');
+            if (!tbody) return;
 
-        function toggleAdmin() {
-            let panel = document.getElementById('adminControls');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function checkAdmin() {
-            if (document.getElementById('adminPass').value === '1234') {
-                document.getElementById('loginBox').style.display = 'none';
-                document.getElementById('manageBox').style.display = 'block';
-            } else {
-                alert('รหัสผ่านไม่ถูกต้อง');
+            if (appData.queues.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">ยังไม่มีข้อมูลคิวใน Google Sheets</td></tr>`;
+                return;
             }
-        }
 
-        function renderPortfolio() {
-            let grid = document.getElementById('portfolioGrid');
-            if (!appData.portfolio.length) { grid.innerHTML = '<p>ยังไม่มีผลงาน</p>'; return; }
-            grid.innerHTML = appData.portfolio.map(item => `
-                <div class="card">
-                    ${item.img ? `<img src="${item.img}" alt="${item.title}">` : ''}
-                    <h3 style="margin:10px 0 5px 0; font-size:16px; color:#be185d;">${item.title || ''}</h3>
-                    <p style="margin:0 0 5px 0; font-size:13px; color:#6b7280;">${item.category || ''}</p>
-                    <p style="margin:0; font-size:14px;">${item.desc || ''}</p>
-                    ${isAdminLoggedIn() ? `<button onclick="deleteItem('portfolio', '${item.id}')" style="margin-top:10px; background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">ลบ</button>` : ''}
-                </div>
-            `).join('');
-        }
+            let html = '';
+            let availableCount = 0;
 
-        function renderPricing() {
-            let grid = document.getElementById('pricingGrid');
-            if (!appData.pricing.length) { grid.innerHTML = '<p>ยังไม่มีเรทราคา</p>'; return; }
-            grid.innerHTML = appData.pricing.map(item => `
-                <div class="card">
-                    <h3 style="margin:0 0 8px 0; font-size:16px; color:#be185d;">${item.title || item.name || ''}</h3>
-                    <p style="font-size: 18px; color: #ec4899; font-weight:bold; margin:0 0 8px 0;">${item.price || '-'}</p>
-                    <p style="margin:0; font-size:14px;">${item.desc || item.details || ''}</p>
-                    ${isAdminLoggedIn() ? `<button onclick="deleteItem('pricing', '${item.id}')" style="margin-top:10px; background:#ef4444; color:#fff; border:none; padding:4px 8px; border-radius:4px; cursor:pointer;">ลบ</button>` : ''}
-                </div>
-            `).join('');
-        }
+            appData.queues.forEach((q, idx) => {
+                let badgeClass = 'bg-amber-100 text-amber-700';
+                let statusText = q.status;
+                if (q.status === 'Done') badgeClass = 'bg-emerald-100 text-emerald-700';
+                else if (q.status === 'In Progress') badgeClass = 'bg-sky-100 text-sky-700';
+                else if (q.status === 'Available' || q.status.includes('คิวว่าง')) {
+                    badgeClass = 'bg-emerald-500 text-white font-bold';
+                    statusText = '✨ คิวว่าง';
+                    availableCount++;
+                }
 
-        function renderQueues() {
-            let container = document.getElementById('queueContainer');
-            let totalQ = appData.queues.length;
-            // สมมติโควตาเต็มเดือนคือ 10 คิว (สามารถปรับเปลี่ยนตัวเลขตรงนี้ได้ตามต้องการ)
-            let maxCapacity = 10;
-            let freeQ = Math.max(0, maxCapacity - totalQ);
-
-            document.getElementById('totalQueueCount').innerText = totalQ + " คิว";
-            document.getElementById('freeQueueCount').innerText = freeQ + " คิว";
-
-            if (!totalQ) { container.innerHTML = '<p>ไม่มีคิวในระบบ</p>'; return; }
-            let html = `<table><tr><th>ชื่อลูกค้า / คิว</th><th>สถานะ</th><th>รายละเอียด</th></tr>`;
-            appData.queues.forEach(q => {
-                html += `<tr><td>${q.title || q.name || '-'}</td><td><span style="color:#ec4899; font-weight:600;">${q.category || q.status || '-'}</span></td><td>${q.desc || ''}</td></tr>`;
+                html += `
+                    <tr class="hover:bg-white/40 transition-colors">
+                        <td class="py-3 px-4 font-bold text-pink-600">#${String(idx + 1).padStart(2, '0')}</td>
+                        <td class="py-3 px-4">${q.name}</td>
+                        <td class="py-3 px-4">${q.type}</td>
+                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-medium ${badgeClass}">${statusText}</span></td>
+                    </tr>
+                `;
             });
-            html += `</table>`;
+
+            tbody.innerHTML = html;
+            document.getElementById('stat-total-slots').innerHTML = `${appData.queues.length} <span class="text-sm font-normal text-slate-500">คิว</span>`;
+            document.getElementById('stat-available-slots').innerHTML = `${availableCount} <span class="text-sm font-normal text-slate-500">คิว</span>`;
+            document.getElementById('queue-count-summary').innerText = `ทั้งหมด ${appData.queues.length} คิว`;
+        }
+
+        // 3. เรนเดอร์เรทราคา
+        function renderPricingData() {
+            const container = document.getElementById('pricing-container');
+            if (!container) return;
+
+            if (appData.pricing.length === 0) {
+                container.innerHTML = `<div class="glass-card rounded-3xl p-6 text-center text-slate-400 col-span-3">ยังไม่มีข้อมูลเรทราคาใน Google Sheets</div>`;
+                return;
+            }
+
+            let html = '';
+            appData.pricing.forEach((p) => {
+                html += `
+                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-white/90 shadow-md relative overflow-hidden bg-white/70">
+                        <div class="absolute top-0 right-0 bg-pink-300 text-pink-800 px-4 py-1 rounded-bl-2xl text-[11px] font-bold">${p.tag || 'Package'}</div>
+                        <div>
+                            <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-xl mb-4 shadow-sm text-pink-600">
+                                <i class="fa-solid fa-tag"></i>
+                            </div>
+                            <h4 class="text-lg font-bold text-slate-800 mb-1">${p.title}</h4>
+                            <p class="text-xs text-slate-500 mb-4">${p.desc}</p>
+                            <div class="text-3xl font-extrabold text-pink-600 mb-4">${p.price}</div>
+                        </div>
+                        <button onclick="switchTab('contact')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-semibold text-xs shadow-sm hover:opacity-90 transition-all">
+                            จ้างงานเรทนี้
+                        </button>
+                    </div>
+                `;
+            });
             container.innerHTML = html;
         }
 
-        function isAdminLoggedIn() {
-            return document.getElementById('manageBox').style.display === 'block';
+        // 4. ฟังก์ชันส่งข้อมูลบรีฟจากหน้าเว็บเข้าชีต Briefs
+        async function submitBriefToSheet() {
+            const name = document.getElementById('brief-name').value.trim();
+            const type = document.getElementById('brief-type').value;
+            const details = document.getElementById('brief-details').value.trim();
+            const statusEl = document.getElementById('submit-status');
+
+            if (!name) {
+                alert('กรุณากรอกชื่อเล่นลูกค้าก่อนส่งบรีฟค่ะ');
+                return;
+            }
+
+            statusEl.innerText = 'กำลังส่งข้อมูลเข้า Google Sheets...';
+            statusEl.className = 'text-xs text-sky-600 font-semibold opacity-100';
+
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ action: 'saveBrief', name, type, details })
+                });
+
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> ส่งบรีฟเข้า Google Sheets สำเร็จแล้ว!';
+                statusEl.className = 'text-xs text-emerald-600 font-semibold opacity-100';
+                
+                // ล้างฟอร์ม
+                document.getElementById('brief-name').value = '';
+                document.getElementById('brief-details').value = '';
+            } catch (error) {
+                statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> เกิดข้อผิดพลาดในการส่งข้อมูล';
+                statusEl.className = 'text-xs text-red-500 font-semibold opacity-100';
+            }
         }
 
-        async function addNewItem() {
-            let payload = {
-                sheet: document.getElementById('targetSheet').value,
-                action: 'add',
-                data: {
-                    title: document.getElementById('addItemTitle').value,
-                    category: document.getElementById('addItemCategory').value,
-                    img: document.getElementById('addItemImg').value,
-                    desc: document.getElementById('addItemDesc').value
-                }
-            };
-            let res = await fetch(scriptURL, { method: 'POST', body: JSON.stringify(payload) });
-            let result = await res.json();
-            if (result.status === 'success') { alert('เพิ่มสำเร็จ!'); loadData(); }
+        // Tab Switching
+        function switchTab(tabId) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
+            const target = document.getElementById('section-' + tabId);
+            if (target) target.classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.className = "nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40";
+            });
+            const activeBtn = document.getElementById('nav-' + tabId);
+            if (activeBtn) activeBtn.className = "nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-white text-pink-600 shadow-sm";
+
+            const mainContainer = document.querySelector('main');
+            if (mainContainer) mainContainer.scrollTop = 0;
         }
 
-        async function deleteItem(sheetName, id) {
-            if (!confirm('ยืนยันการลบ?')) return;
-            let res = await fetch(scriptURL, { method: 'POST', body: JSON.stringify({ sheet: sheetName, action: 'delete', id: id }) });
-            let result = await res.json();
-            if (result.status === 'success') { loadData(); }
-        }
-
-        loadData();
+        // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
+        fetchGoogleSheetData();
     </script>
 </body>
 </html>
