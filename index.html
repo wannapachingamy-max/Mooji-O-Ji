@@ -397,7 +397,7 @@
                     <i class="fa-solid fa-gears text-xl"></i>
                     <div>
                         <h3 class="font-bold text-base">ระบบจัดการหลังบ้านแอดมิน (Firebase Real-time)</h3>
-                        <p class="text-xs text-pink-100">เพิ่ม/แก้ไขคิวงาน เรทราคา และอัปโหลดรูปภาพผลงานจริง</p>
+                        <p class="text-xs text-pink-100">เพิ่ม/แก้ไขคิวงาน เรทราคา และจัดการลิงก์รูปภาพผลงาน</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -408,7 +408,7 @@
             <div class="flex space-x-2 px-6 py-3 bg-pink-50/50 border-b border-pink-100">
                 <button onclick="switchAdminTab('queue')" id="adm-tab-queue" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-pink-500 text-white shadow-sm">จัดการคิวงาน</button>
                 <button onclick="switchAdminTab('pricing')" id="adm-tab-pricing" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/80 text-slate-600 hover:bg-white">จัดการเรทราคา</button>
-                <button onclick="switchAdminTab('portfolio')" id="adm-tab-portfolio" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/80 text-slate-600 hover:bg-white">จัดการผลงาน (อัปโหลดรูป)</button>
+                <button onclick="switchAdminTab('portfolio')" id="adm-tab-portfolio" class="adm-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-white/80 text-slate-600 hover:bg-white">จัดการผลงาน (ลิงก์รูป)</button>
             </div>
 
             <div class="flex-1 overflow-y-auto p-6 space-y-6 bg-slate-50/50">
@@ -442,10 +442,10 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="adm-pricing-grid"></div>
                 </div>
 
-                <!-- TAB 3: Portfolio & Image Upload -->
+                <!-- TAB 3: Portfolio & Image URL -->
                 <div id="adm-section-portfolio" class="adm-section space-y-4 hidden">
                     <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-slate-800 text-sm">จัดการผลงานและอัปโหลดรูปภาพ</h4>
+                        <h4 class="font-bold text-slate-800 text-sm">จัดการผลงานและลิงก์รูปภาพ</h4>
                         <button onclick="openAddPortfolioModal()" class="px-4 py-2 rounded-xl bg-pink-500 text-white text-xs font-semibold shadow-sm hover:bg-pink-600"><i class="fa-solid fa-plus mr-1"></i> เพิ่มผลงานใหม่</button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="adm-portfolio-grid"></div>
@@ -497,12 +497,11 @@
         </div>
     </div>
 
-    <!-- MODAL: ADD/EDIT PORTFOLIO (WITH IMAGE UPLOAD) -->
+    <!-- MODAL: ADD/EDIT PORTFOLIO (WITH IMAGE URL INPUT) -->
     <div id="portfolio-form-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="glass-card bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-white">
             <h3 class="font-bold text-slate-800 text-base mb-4" id="portfolio-modal-title">จัดการผลงาน</h3>
             <input type="hidden" id="portfolio-edit-id">
-            <input type="hidden" id="portfolio-existing-img">
             <div class="space-y-3 text-xs">
                 <div><label class="block font-semibold mb-1">ชื่อผลงาน:</label><input type="text" id="port-modal-title" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200"></div>
                 <div>
@@ -514,13 +513,13 @@
                     </select>
                 </div>
                 <div>
-                    <label class="block font-semibold mb-1">อัปโหลดรูปภาพผลงาน (เลือกรูปจากเครื่อง):</label>
-                    <input type="file" id="port-file-input" accept="image/*" class="w-full text-xs file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-pink-50 file:text-pink-700 hover:file:bg-pink-100">
+                    <label class="block font-semibold mb-1">ลิงก์รูปภาพ (Image URL):</label>
+                    <input type="url" id="port-modal-img" placeholder="https://example.com/image.jpg" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200">
                 </div>
                 <div><label class="block font-semibold mb-1">คำอธิบาย:</label><input type="text" id="port-modal-desc" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200"></div>
                 <div class="flex space-x-2 pt-3">
                     <button onclick="closePortfolioModal()" class="flex-1 py-2 rounded-xl bg-slate-200 text-slate-700 font-semibold">ยกเลิก</button>
-                    <button onclick="savePortfolioItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold" id="port-save-btn">บันทึก</button>
+                    <button onclick="savePortfolioItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -530,7 +529,6 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA_yIBa7zNKxZAOUp_TgjJO5yWNkwWsyOA",
@@ -544,7 +542,6 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        const storage = getStorage(app);
 
         let queuesData = [];
         let pricingData = [];
@@ -672,7 +669,7 @@
                 html += `
                     <div class="portfolio-item glass-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all group" data-category="${item.category}">
                         <div class="h-48 overflow-hidden relative bg-sky-100">
-                            <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                            <img src="${item.img || 'https://placehold.co/600x400/e0f2fe/0284c7?text=Art'}" alt="${item.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                             <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-white/80 backdrop-blur-md text-[10px] font-semibold text-sky-600">${item.category.toUpperCase()}</span>
                         </div>
                         <div class="p-4">
@@ -692,7 +689,7 @@
             portfolioData.forEach(item => {
                 html += `
                     <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
-                        <div class="h-32 bg-slate-100"><img src="${item.img}" class="w-full h-full object-cover"></div>
+                        <div class="h-32 bg-slate-100"><img src="${item.img || 'https://placehold.co/600x400/e0f2fe/0284c7?text=Art'}" class="w-full h-full object-cover"></div>
                         <div class="p-3"><h5 class="font-bold text-slate-800 text-xs truncate">${item.title}</h5><span class="text-[10px] text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">${item.category}</span></div>
                         <div class="p-3 pt-0 flex space-x-2">
                             <button onclick="openEditPortfolioModal('${item.id}')" class="flex-1 py-1 rounded-lg bg-amber-500 text-white text-[11px]"><i class="fa-solid fa-pen"></i></button>
@@ -779,14 +776,13 @@
             if(confirm('ลบเรทราคานี้ใช่หรือไม่?')) await deleteDoc(doc(db, "pricing", id));
         }
 
-        // --- Firebase Actions: Portfolio & Image Upload ---
+        // --- Firebase Actions: Portfolio & Image URL ---
         window.openAddPortfolioModal = function() {
             document.getElementById('portfolio-modal-title').innerText = 'เพิ่มผลงานใหม่';
             document.getElementById('portfolio-edit-id').value = '';
             document.getElementById('port-modal-title').value = '';
             document.getElementById('port-modal-category').value = 'chibi';
-            document.getElementById('port-file-input').value = '';
-            document.getElementById('portfolio-existing-img').value = '';
+            document.getElementById('port-modal-img').value = '';
             document.getElementById('port-modal-desc').value = '';
             document.getElementById('portfolio-form-modal').classList.remove('hidden');
         }
@@ -797,7 +793,7 @@
             document.getElementById('portfolio-edit-id').value = id;
             document.getElementById('port-modal-title').value = item.title;
             document.getElementById('port-modal-category').value = item.category;
-            document.getElementById('portfolio-existing-img').value = item.img;
+            document.getElementById('port-modal-img').value = item.img || '';
             document.getElementById('port-modal-desc').value = item.desc;
             document.getElementById('portfolio-form-modal').classList.remove('hidden');
         }
@@ -808,37 +804,17 @@
             const title = document.getElementById('port-modal-title').value;
             const category = document.getElementById('port-modal-category').value;
             const desc = document.getElementById('port-modal-desc').value;
-            const fileInput = document.getElementById('port-file-input');
-            const saveBtn = document.getElementById('port-save-btn');
-
-            let imageUrl = document.getElementById('portfolio-existing-img').value;
-
-            saveBtn.innerText = 'กำลังอัปโหลดรูป...';
-            saveBtn.disabled = true;
+            const img = document.getElementById('port-modal-img').value || 'https://placehold.co/600x400/e0f2fe/0284c7?text=Art';
 
             try {
-                if (fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const storageRef = ref(storage, 'portfolio/' + Date.now() + '_' + file.name);
-                    const snapshot = await uploadBytes(storageRef, file);
-                    imageUrl = await getDownloadURL(snapshot.ref);
-                }
-
-                if (!imageUrl) {
-                    imageUrl = 'https://placehold.co/600x400/e0f2fe/0284c7?text=Art';
-                }
-
                 if (id) {
-                    await updateDoc(doc(db, "portfolio", id), { title, category, img: imageUrl, desc });
+                    await updateDoc(doc(db, "portfolio", id), { title, category, img, desc });
                 } else {
-                    await addDoc(collection(db, "portfolio"), { title, category, img: imageUrl, desc });
+                    await addDoc(collection(db, "portfolio"), { title, category, img, desc });
                 }
                 closePortfolioModal();
             } catch (error) {
-                alert('เกิดข้อผิดพลาดในการอัปโหลด: ' + error.message);
-            } finally {
-                saveBtn.innerText = 'บันทึก';
-                saveBtn.disabled = false;
+                alert('เกิดข้อผิดพลาดในการบันทึก: ' + error.message);
             }
         }
 
@@ -901,6 +877,7 @@
         window.closeAdminDashboard = function() { document.getElementById('admin-dashboard-modal').classList.add('hidden'); }
 
         window.switchAdminTab = function(tabName) {
+            document.querySelectorAll('.adm-section').forEach, sec => sec.classList.add('hidden');
             document.querySelectorAll('.adm-section').forEach(sec => sec.classList.add('hidden'));
             document.getElementById('adm-section-' + tabName).classList.remove('hidden');
             document.querySelectorAll('.adm-tab-btn').forEach(btn => {
