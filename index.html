@@ -100,14 +100,15 @@
                 </button>
             </nav>
 
-            <!-- Right Controls: Status & Admin Login Button -->
+            <!-- Right Controls: Status & Admin Gear Button -->
             <div class="flex items-center space-x-3">
                 <div class="hidden sm:flex items-center space-x-2 bg-emerald-100/80 border border-emerald-200 px-3 py-1.5 rounded-full">
                     <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
                     <span class="text-xs font-semibold text-emerald-700">Status: OPEN</span>
                 </div>
-                <button onclick="openAdminLoginModal()" class="px-3.5 py-1.5 rounded-full bg-white/80 hover:bg-white border border-pink-200 text-pink-600 text-xs font-semibold shadow-sm transition-all flex items-center">
-                    <i class="fa-solid fa-lock mr-1.5"></i> หลังบ้านแอดมิน
+                <!-- เปลี่ยนปุ่มหลังบ้านแอดมินเป็นรูปฟันเฟือง -->
+                <button onclick="openAdminLoginModal()" title="หลังบ้านแอดมิน" class="w-9 h-9 rounded-full bg-white/80 hover:bg-white border border-pink-200 text-pink-600 shadow-sm transition-all flex items-center justify-center">
+                    <i class="fa-solid fa-gear text-base"></i>
                 </button>
             </div>
         </header>
@@ -401,13 +402,13 @@
         <div class="glass-card bg-white/90 rounded-3xl p-6 max-w-sm w-full shadow-2xl border border-white">
             <div class="text-center mb-4">
                 <div class="w-12 h-12 rounded-full bg-pink-100 text-pink-600 flex items-center justify-center mx-auto mb-2 text-xl shadow-sm">
-                    <i class="fa-solid fa-lock"></i>
+                    <i class="fa-solid fa-gear"></i>
                 </div>
                 <h3 class="font-bold text-slate-800 text-base">เข้าสู่ระบบหลังบ้านแอดมิน</h3>
-                <p class="text-xs text-slate-500">กรุณากรอกรหัสผ่านเพื่อจัดการข้อมูล</p>
+                <p class="text-xs text-slate-500">กรุณากรอกรหัสผ่านเพื่อจัดการข้อมูล (ค่าเริ่มต้น: 1234)</p>
             </div>
             <div class="space-y-3">
-                <input type="password" id="admin-password-input" placeholder="รหัสผ่าน (ค่าเริ่มต้น: 1234)" class="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400">
+                <input type="password" id="admin-password-input" placeholder="รหัสผ่าน" class="w-full px-4 py-2.5 rounded-xl bg-white/80 border border-slate-200 text-xs focus:outline-none focus:ring-2 focus:ring-pink-400">
                 <p id="login-error-msg" class="text-[11px] text-red-500 text-center hidden">รหัสผ่านไม่ถูกต้อง กรุณาลองใหม่อีกครั้ง</p>
                 <div class="flex space-x-2 pt-2">
                     <button onclick="closeAdminLoginModal()" class="flex-1 py-2 rounded-xl bg-slate-200 text-slate-700 text-xs font-semibold hover:bg-slate-300 transition-all">ยกเลิก</button>
@@ -426,7 +427,7 @@
                     <i class="fa-solid fa-gears text-xl"></i>
                     <div>
                         <h3 class="font-bold text-base">ระบบจัดการหลังบ้านแอดมิน (Admin Dashboard)</h3>
-                        <p class="text-xs text-pink-100">จัดการคิวงาน เรทราคา และผลงานร้านค้าของคุณ</p>
+                        <p class="text-xs text-pink-100">เพิ่ม/แก้ไขคิวงาน เรทราคา และผลงานร้านค้าของคุณ</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-3">
@@ -455,10 +456,8 @@
                     <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <h4 class="font-bold text-slate-800 text-sm">รายการคิวงานทั้งหมด (แก้ไข/เพิ่ม/ลบ)</h4>
                         <div class="flex items-center space-x-3 w-full sm:w-auto">
-                            <label class="text-xs font-semibold text-slate-600">ตั้งค่าจำนวนคิวทั้งหมด:</label>
-                            <input type="number" id="adm-total-slots-input" class="w-20 px-3 py-1.5 rounded-xl bg-white border border-slate-200 text-xs font-bold text-center" onchange="updateTotalSlots(this.value)">
-                            <button onclick="openAddQueueModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all">
-                                <i class="fa-solid fa-plus mr-1"></i> เพิ่มคิวใหม่
+                            <button onclick="openAddQueueModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all flex items-center">
+                                <i class="fa-solid fa-plus mr-1.5"></i> เพิ่มคิวงานใหม่
                             </button>
                         </div>
                     </div>
@@ -467,7 +466,7 @@
                         <table class="w-full text-left text-xs">
                             <thead>
                                 <tr class="bg-slate-100 text-slate-600 border-b border-slate-200">
-                                    <th class="py-3 px-4">คิวที่</th>
+                                    <th class="py-3 px-4">ลำดับ</th>
                                     <th class="py-3 px-4">ชื่อลูกค้า</th>
                                     <th class="py-3 px-4">ประเภทงาน</th>
                                     <th class="py-3 px-4">สถานะ</th>
@@ -485,8 +484,8 @@
                 <div id="adm-section-pricing" class="adm-section space-y-4 hidden">
                     <div class="flex items-center justify-between">
                         <h4 class="font-bold text-slate-800 text-sm">จัดการเรทราคาแพ็กเกจ</h4>
-                        <button onclick="openAddPricingModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all">
-                            <i class="fa-solid fa-plus mr-1"></i> เพิ่มเรทราคา
+                        <button onclick="openAddPricingModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all flex items-center">
+                            <i class="fa-solid fa-plus mr-1.5"></i> เพิ่มเรทราคาใหม่
                         </button>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="adm-pricing-grid">
@@ -497,9 +496,9 @@
                 <!-- TAB 3: Portfolio Manager -->
                 <div id="adm-section-portfolio" class="adm-section space-y-4 hidden">
                     <div class="flex items-center justify-between">
-                        <h4 class="font-bold text-slate-800 text-sm">จัดการผลงานในพอร์ต</h4>
-                        <button onclick="openAddPortfolioModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all">
-                            <i class="fa-solid fa-plus mr-1"></i> เพิ่มผลงานใหม่
+                        <h4 class="font-bold text-slate-800 text-sm">จัดการผลงานในพอร์ตโฟลิโอ</h4>
+                        <button onclick="openAddPortfolioModal()" class="px-4 py-2 rounded-xl bg-pink-500 hover:bg-pink-600 text-white text-xs font-semibold shadow-sm transition-all flex items-center">
+                            <i class="fa-solid fa-plus mr-1.5"></i> เพิ่มผลงานใหม่
                         </button>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4" id="adm-portfolio-grid">
@@ -554,7 +553,71 @@
                 </div>
                 <div class="flex space-x-2 pt-3">
                     <button onclick="closeQueueModal()" class="flex-1 py-2 rounded-xl bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300">ยกเลิก</button>
-                    <button onclick="saveQueueItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold hover:bg-pink-600 shadow-sm">บันทึก</button>
+                    <button onclick="saveQueueModalItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold hover:bg-pink-600 shadow-sm">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD/EDIT PRICING -->
+    <div id="pricing-form-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-white">
+            <h3 class="font-bold text-slate-800 text-base mb-4" id="pricing-modal-title">เพิ่มเรทราคาใหม่</h3>
+            <input type="hidden" id="pricing-edit-index" value="-1">
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ชื่อแพ็กเกจ:</label>
+                    <input type="text" id="p-modal-title" placeholder="เช่น ครึ่งตัว (Bust-Up)" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ราคา:</label>
+                    <input type="text" id="p-modal-price" placeholder="เช่น 650฿" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">รายละเอียดแพ็กเกจ:</label>
+                    <textarea id="p-modal-desc" rows="2" placeholder="อธิบายรายละเอียดเรทราคานี้" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300"></textarea>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ป้ายกำกับ (Tag):</label>
+                    <input type="text" id="p-modal-tag" placeholder="เช่น Best Value" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div class="flex space-x-2 pt-3">
+                    <button onclick="closePricingModal()" class="flex-1 py-2 rounded-xl bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300">ยกเลิก</button>
+                    <button onclick="savePricingModalItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold hover:bg-pink-600 shadow-sm">บันทึก</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: ADD/EDIT PORTFOLIO -->
+    <div id="portfolio-form-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="glass-card bg-white rounded-3xl p-6 max-w-md w-full shadow-2xl border border-white">
+            <h3 class="font-bold text-slate-800 text-base mb-4" id="portfolio-modal-title">เพิ่มผลงานใหม่</h3>
+            <input type="hidden" id="portfolio-edit-index" value="-1">
+            <div class="space-y-3 text-xs">
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ชื่อผลงาน:</label>
+                    <input type="text" id="port-modal-title" placeholder="เช่น Magical Princess" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">หมวดหมู่:</label>
+                    <select id="port-modal-category" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                        <option value="chibi">จิบิ / Chibi</option>
+                        <option value="bustup">ครึ่งตัว / Bust-up</option>
+                        <option value="fullbody">เต็มตัว / Full Body</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">ลิงก์รูปภาพผลงาน:</label>
+                    <input type="text" id="port-modal-img" placeholder="https://placehold.co/600x400/..." class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div>
+                    <label class="block font-semibold text-slate-700 mb-1">คำอธิบายย่อ:</label>
+                    <input type="text" id="port-modal-desc" placeholder="รายละเอียดผลงาน" class="w-full px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-200 focus:outline-none focus:ring-2 focus:ring-pink-300">
+                </div>
+                <div class="flex space-x-2 pt-3">
+                    <button onclick="closePortfolioModal()" class="flex-1 py-2 rounded-xl bg-slate-200 text-slate-700 font-semibold hover:bg-slate-300">ยกเลิก</button>
+                    <button onclick="savePortfolioModalItem()" class="flex-1 py-2 rounded-xl bg-pink-500 text-white font-semibold hover:bg-pink-600 shadow-sm">บันทึก</button>
                 </div>
             </div>
         </div>
@@ -565,23 +628,15 @@
         // Default LocalStorage Database Simulation
         let db = JSON.parse(localStorage.getItem('mistystar_db')) || {
             adminPassword: '1234',
-            totalSlots: 15,
             queues: [
-                { id: '#01', name: 'คุณน้ำอิง (Namlm...)', type: 'Bust-up', status: 'Done' },
-                { id: '#02', name: 'คุณการ์ฟิลด์ (Garfield...)', type: 'Full Body', status: 'Done' },
-                { id: '#03', name: 'คุณมายด์ (Mind_...)', type: 'Chibi Set', status: 'In Progress' },
-                { id: '#04', name: 'คุณเปรม (Prem...)', type: 'Bust-up', status: 'Queued' },
-                { id: '#05', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#06', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#07', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#08', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#09', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#10', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#11', name: 'คิวจองเรียบร้อย', type: 'Various', status: 'Queued' },
-                { id: '#12', name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
-                { id: '#13', name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
-                { id: '#14', name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
-                { id: '#15', name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' }
+                { name: 'คุณน้ำอิง (Namlm...)', type: 'Bust-up', status: 'Done' },
+                { name: 'คุณการ์ฟิลด์ (Garfield...)', type: 'Full Body', status: 'Done' },
+                { name: 'คุณมายด์ (Mind_...)', type: 'Chibi Set', status: 'In Progress' },
+                { name: 'คุณเปรม (Prem...)', type: 'Bust-up', status: 'Queued' },
+                { name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
+                { name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
+                { name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' },
+                { name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' }
             ],
             pricing: [
                 { title: 'จิบิ (Chibi Style)', price: '350฿', desc: 'ตัวเร่งสั้น หัวโตตัวเล็ก น่ารักใจเจ็บ เหมาะทำสติกเกอร์หรือโปรไฟล์', tag: 'Popular', tagColor: 'bg-sky-200/60 text-sky-700', bg: 'bg-sky-100', icon: 'fa-face-smile', btnColor: 'from-sky-300 to-sky-400 text-slate-800' },
@@ -591,10 +646,7 @@
             portfolio: [
                 { title: 'Sweet Dream Chibi Set', category: 'chibi', desc: 'งานวาดตัวละครสไตล์จิบิ น่ารักสดใส โทนพาสเทลฟ้าชมพู', img: 'https://placehold.co/600x400/e0f2fe/0284c7?text=Chibi+Pastel+Dream' },
                 { title: 'Magical Pastel Princess', category: 'bustup', desc: 'ภาพครึ่งตัวเน้นรายละเอียดชุดและดวงตากลมโตสไตล์อนิเมะ', img: 'https://placehold.co/600x400/fce7f3/db2777?text=Bust-Up+Magical+Girl' },
-                { title: 'Starry Night Full Body', category: 'fullbody', desc: 'ภาพเต็มตัวพร้อมฉากหลังประกอบโทนสีฟ้าม่วงละมุน', img: 'https://placehold.co/600x400/f3e8ff/7c3aed?text=Full+Body+Commission' },
-                { title: 'Sweet Couple Chibi', category: 'chibi', desc: 'งานคู่น่ารักๆ เหมาะสำหรับเป็นของขวัญวันพิเศษ', img: 'https://placehold.co/600x400/e0f2fe/0369a1?text=Chibi+Couple+Art' },
-                { title: 'Original Character Bust', category: 'bustup', desc: 'คอมมิชชั่นตัวละครออริจินัล ดีไซน์เสื้อผ้าและเครื่องประดับสุดคิวท์', img: 'https://placehold.co/600x400/fce7f3/be185d?text=OC+Bust-Up+Art' },
-                { title: 'Idol Stage Costume', category: 'fullbody', desc: 'ชุดไอดอลจัดเต็ม ดีเทลระยิบระยับโทนพาสเทลหวานละมุน', img: 'https://placehold.co/600x400/f3e8ff/6d28d9?text=Idol+Stage+FullBody' }
+                { title: 'Starry Night Full Body', category: 'fullbody', desc: 'ภาพเต็มตัวพร้อมฉากหลังประกอบโทนสีฟ้าม่วงละมุน', img: 'https://placehold.co/600x400/f3e8ff/7c3aed?text=Full+Body+Commission' }
             ]
         };
 
@@ -608,6 +660,8 @@
             renderQueue();
             renderPricing();
             renderPortfolio();
+            renderAdminPricing();
+            renderAdminPortfolio();
         }
 
         function renderQueue() {
@@ -638,19 +692,12 @@
                 admHtml += `
                     <tr class="hover:bg-slate-50 transition-colors">
                         <td class="py-3 px-4 font-bold text-pink-600">#${String(idx + 1).padStart(2, '0')}</td>
-                        <td class="py-3 px-4"><input type="text" value="${q.name}" id="adm-q-name-${idx}" class="px-2 py-1 rounded bg-slate-50 border border-slate-200 w-full text-xs"></td>
-                        <td class="py-3 px-4"><input type="text" value="${q.type}" id="adm-q-type-${idx}" class="px-2 py-1 rounded bg-slate-50 border border-slate-200 w-full text-xs"></td>
-                        <td class="py-3 px-4">
-                            <select id="adm-q-status-${idx}" class="px-2 py-1 rounded bg-slate-50 border border-slate-200 text-xs">
-                                <option value="Done" ${q.status === 'Done' ? 'selected' : ''}>เสร็จสิ้น</option>
-                                <option value="In Progress" ${q.status === 'In Progress' ? 'selected' : ''}>กำลังลงสี</option>
-                                <option value="Queued" ${q.status === 'Queued' ? 'selected' : ''}>รอคิว</option>
-                                <option value="Available" ${q.status === 'Available' ? 'selected' : ''}>คิวว่าง</option>
-                            </select>
-                        </td>
+                        <td class="py-3 px-4 font-medium text-slate-800">${q.name}</td>
+                        <td class="py-3 px-4 text-slate-600">${q.type}</td>
+                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-medium ${badgeClass}">${statusText}</span></td>
                         <td class="py-3 px-4 text-center space-x-1">
-                            <button onclick="updateQueueRow(${idx})" class="px-2 py-1 rounded bg-sky-500 text-white text-[10px] hover:bg-sky-600"><i class="fa-solid fa-save"></i></button>
-                            <button onclick="deleteQueueRow(${idx})" class="px-2 py-1 rounded bg-red-500 text-white text-[10px] hover:bg-red-600"><i class="fa-solid fa-trash"></i></button>
+                            <button onclick="openEditQueueModal(${idx})" class="px-2.5 py-1 rounded-lg bg-amber-500 text-white text-[11px] hover:bg-amber-600 transition-all"><i class="fa-solid fa-pen"></i></button>
+                            <button onclick="deleteQueueRow(${idx})" class="px-2.5 py-1 rounded-lg bg-red-500 text-white text-[11px] hover:bg-red-600 transition-all"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>
                 `;
@@ -662,33 +709,55 @@
             document.getElementById('stat-total-slots').innerHTML = `${db.queues.length} <span class="text-sm font-normal text-slate-500">คิว</span>`;
             document.getElementById('stat-available-slots').innerHTML = `${availableCount} <span class="text-sm font-normal text-slate-500">คิว</span>`;
             document.getElementById('queue-count-summary').innerText = `จองแล้ว ${db.queues.length - availableCount} / ${db.queues.length} คิว`;
-            const totalInput = document.getElementById('adm-total-slots-input');
-            if (totalInput) totalInput.value = db.queues.length;
         }
 
         function renderPricing() {
             const container = document.getElementById('pricing-container');
             if (!container) return;
             let html = '';
-            db.pricing.forEach((p, idx) => {
+            db.pricing.forEach((p) => {
                 html += `
                     <div class="glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-white/90 shadow-md relative overflow-hidden bg-white/70">
-                        <div class="absolute top-0 right-0 ${p.tagColor} px-4 py-1 rounded-bl-2xl text-[11px] font-bold">${p.tag}</div>
+                        <div class="absolute top-0 right-0 ${p.tagColor || 'bg-pink-300 text-pink-800'} px-4 py-1 rounded-bl-2xl text-[11px] font-bold">${p.tag || 'Package'}</div>
                         <div>
-                            <div class="w-12 h-12 rounded-2xl ${p.bg} flex items-center justify-center text-xl mb-4 shadow-sm">
-                                <i class="fa-solid ${p.icon}"></i>
+                            <div class="w-12 h-12 rounded-2xl ${p.bg || 'bg-pink-100'} flex items-center justify-center text-xl mb-4 shadow-sm text-pink-600">
+                                <i class="fa-solid ${p.icon || 'fa-tag'}"></i>
                             </div>
                             <h4 class="text-lg font-bold text-slate-800 mb-1">${p.title}</h4>
                             <p class="text-xs text-slate-500 mb-4">${p.desc}</p>
                             <div class="text-3xl font-extrabold text-pink-600 mb-4">${p.price}</div>
                         </div>
-                        <button onclick="switchTab('contact')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r ${p.btnColor} font-semibold text-xs shadow-sm hover:opacity-90 transition-all">
+                        <button onclick="switchTab('contact')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r ${p.btnColor || 'from-pink-400 to-pink-500 text-white'} font-semibold text-xs shadow-sm hover:opacity-90 transition-all">
                             จ้างงานเรทนี้
                         </button>
                     </div>
                 `;
             });
             container.innerHTML = html;
+        }
+
+        function renderAdminPricing() {
+            const grid = document.getElementById('adm-pricing-grid');
+            if (!grid) return;
+            let html = '';
+            db.pricing.forEach((p, idx) => {
+                html += `
+                    <div class="bg-white rounded-2xl p-4 border border-slate-200 shadow-sm flex flex-col justify-between space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between">
+                                <h5 class="font-bold text-slate-800 text-sm">${p.title}</h5>
+                                <span class="text-xs font-bold text-pink-600">${p.price}</span>
+                            </div>
+                            <p class="text-[11px] text-slate-500 mt-1 line-clamp-2">${p.desc}</p>
+                        </div>
+                        <div class="flex space-x-2 pt-2 border-t border-slate-100">
+                            <button onclick="openEditPricingModal(${idx})" class="flex-1 py-1.5 rounded-xl bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600"><i class="fa-solid fa-pen mr-1"></i> แก้ไข</button>
+                            <button onclick="deletePricingItem(${idx})" class="flex-1 py-1.5 rounded-xl bg-red-500 text-white text-xs font-semibold hover:bg-red-600"><i class="fa-solid fa-trash mr-1"></i> ลบ</button>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
         }
 
         function renderPortfolio() {
@@ -705,6 +774,30 @@
                         <div class="p-4">
                             <h4 class="font-bold text-slate-800 text-sm mb-1">${item.title}</h4>
                             <p class="text-xs text-slate-500">${item.desc}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html;
+        }
+
+        function renderAdminPortfolio() {
+            const grid = document.getElementById('adm-portfolio-grid');
+            if (!grid) return;
+            let html = '';
+            db.portfolio.forEach((item, idx) => {
+                html += `
+                    <div class="bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm flex flex-col justify-between">
+                        <div class="h-32 bg-slate-100 relative">
+                            <img src="${item.img}" alt="${item.title}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="p-3">
+                            <h5 class="font-bold text-slate-800 text-xs truncate">${item.title}</h5>
+                            <span class="text-[10px] text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full inline-block mt-1">${item.category}</span>
+                        </div>
+                        <div class="p-3 pt-0 flex space-x-2">
+                            <button onclick="openEditPortfolioModal(${idx})" class="flex-1 py-1 rounded-lg bg-amber-500 text-white text-[11px] font-semibold hover:bg-amber-600"><i class="fa-solid fa-pen mr-1"></i> แก้ไข</button>
+                            <button onclick="deletePortfolioItem(${idx})" class="flex-1 py-1 rounded-lg bg-red-500 text-white text-[11px] font-semibold hover:bg-red-600"><i class="fa-solid fa-trash mr-1"></i> ลบ</button>
                         </div>
                     </div>
                 `;
@@ -765,7 +858,7 @@
             if (pwd === db.adminPassword) {
                 closeAdminLoginModal();
                 document.getElementById('admin-dashboard-modal').classList.remove('hidden');
-                renderQueue();
+                renderAll();
             } else {
                 document.getElementById('login-error-msg').classList.remove('hidden');
             }
@@ -787,36 +880,149 @@
             document.getElementById('adm-tab-' + tabName).className = "adm-tab-btn px-4 py-2 rounded-xl text-xs font-semibold bg-pink-500 text-white shadow-sm";
         }
 
-        // Admin Queue Actions
-        function updateTotalSlots(newTotal) {
-            let count = parseInt(newTotal) || 1;
-            if (count < db.queues.length) {
-                db.queues = db.queues.slice(0, count);
+        // --- QUEUE MODAL CONTROLLERS ---
+        function openAddQueueModal() {
+            document.getElementById('queue-modal-title').innerText = 'เพิ่มคิวงานใหม่';
+            document.getElementById('queue-edit-index').value = '-1';
+            document.getElementById('q-modal-name').value = '';
+            document.getElementById('q-modal-type').value = 'Bust-up';
+            document.getElementById('q-modal-status').value = 'Queued';
+            document.getElementById('queue-form-modal').classList.remove('hidden');
+        }
+
+        function openEditQueueModal(idx) {
+            const q = db.queues[idx];
+            document.getElementById('queue-modal-title').innerText = 'แก้ไขคิวงาน (#' + String(idx + 1).padStart(2, '0') + ')';
+            document.getElementById('queue-edit-index').value = idx;
+            document.getElementById('q-modal-name').value = q.name;
+            document.getElementById('q-modal-type').value = q.type;
+            document.getElementById('q-modal-status').value = q.status;
+            document.getElementById('queue-form-modal').classList.remove('hidden');
+        }
+
+        function closeQueueModal() {
+            document.getElementById('queue-form-modal').classList.add('hidden');
+        }
+
+        function saveQueueModalItem() {
+            const idx = parseInt(document.getElementById('queue-edit-index').value);
+            const name = document.getElementById('q-modal-name').value.trim() || 'ไม่ระบุชื่อ';
+            const type = document.getElementById('q-modal-type').value.trim() || '-';
+            const status = document.getElementById('q-modal-status').value;
+
+            if (idx === -1) {
+                db.queues.push({ name, type, status });
             } else {
-                while (db.queues.length < count) {
-                    db.queues.push({ id: `#${String(db.queues.length + 1).padStart(2, '0')}`, name: '✨ คิวว่าง (Available Slot)', type: '-', status: 'Available' });
-                }
+                db.queues[idx] = { name, type, status };
             }
             saveDB();
-        }
-
-        function openAddQueueModal() {
-            db.queues.push({ id: `#${String(db.queues.length + 1).padStart(2, '0')}`, name: 'ชื่อลูกค้าใหม่', type: 'Bust-up', status: 'Queued' });
-            saveDB();
-        }
-
-        function updateQueueRow(idx) {
-            const name = document.getElementById(`adm-q-name-${idx}`).value;
-            const type = document.getElementById(`adm-q-type-${idx}`).value;
-            const status = document.getElementById(`adm-q-status-${idx}`).value;
-            db.queues[idx] = { id: `#${String(idx + 1).padStart(2, '0')}`, name, type, status };
-            saveDB();
-            alert('อัปเดตคิวเรียบร้อยแล้ว!');
+            closeQueueModal();
         }
 
         function deleteQueueRow(idx) {
-            if (confirm('ต้องการลบคิวนี้ใช่หรือไม่?')) {
+            if (confirm('คุณต้องการลบคิวนี้ใช่หรือไม่?')) {
                 db.queues.splice(idx, 1);
+                saveDB();
+            }
+        }
+
+        // --- PRICING MODAL CONTROLLERS ---
+        function openAddPricingModal() {
+            document.getElementById('pricing-modal-title').innerText = 'เพิ่มเรทราคาใหม่';
+            document.getElementById('pricing-edit-index').value = '-1';
+            document.getElementById('p-modal-title').value = '';
+            document.getElementById('p-modal-price').value = '';
+            document.getElementById('p-modal-desc').value = '';
+            document.getElementById('p-modal-tag').value = 'Custom';
+            document.getElementById('pricing-form-modal').classList.remove('hidden');
+        }
+
+        function openEditPricingModal(idx) {
+            const p = db.pricing[idx];
+            document.getElementById('pricing-modal-title').innerText = 'แก้ไขเรทราคา';
+            document.getElementById('pricing-edit-index').value = idx;
+            document.getElementById('p-modal-title').value = p.title;
+            document.getElementById('p-modal-price').value = p.price;
+            document.getElementById('p-modal-desc').value = p.desc;
+            document.getElementById('p-modal-tag').value = p.tag || '';
+            document.getElementById('pricing-form-modal').classList.remove('hidden');
+        }
+
+        function closePricingModal() {
+            document.getElementById('pricing-form-modal').classList.add('hidden');
+        }
+
+        function savePricingModalItem() {
+            const idx = parseInt(document.getElementById('pricing-edit-index').value);
+            const title = document.getElementById('p-modal-title').value.trim() || 'แพ็กเกจใหม่';
+            const price = document.getElementById('p-modal-price').value.trim() || '0฿';
+            const desc = document.getElementById('p-modal-desc').value.trim() || '-';
+            const tag = document.getElementById('p-modal-tag').value.trim() || 'New';
+
+            if (idx === -1) {
+                db.pricing.push({ title, price, desc, tag, tagColor: 'bg-pink-200 text-pink-800', bg: 'bg-pink-100', icon: 'fa-wand-magic-sparkles', btnColor: 'from-pink-400 to-pink-500 text-white' });
+            } else {
+                db.pricing[idx].title = title;
+                db.pricing[idx].price = price;
+                db.pricing[idx].desc = desc;
+                db.pricing[idx].tag = tag;
+            }
+            saveDB();
+            closePricingModal();
+        }
+
+        function deletePricingItem(idx) {
+            if (confirm('คุณต้องการลบเรทราคานี้ใช่หรือไม่?')) {
+                db.pricing.splice(idx, 1);
+                saveDB();
+            }
+        }
+
+        // --- PORTFOLIO MODAL CONTROLLERS ---
+        function openAddPortfolioModal() {
+            document.getElementById('portfolio-modal-title').innerText = 'เพิ่มผลงานใหม่';
+            document.getElementById('portfolio-edit-index').value = '-1';
+            document.getElementById('port-modal-title').value = '';
+            document.getElementById('port-modal-category').value = 'chibi';
+            document.getElementById('port-modal-img').value = 'https://placehold.co/600x400/e0f2fe/0284c7?text=New+Art';
+            document.getElementById('port-modal-desc').value = '';
+            document.getElementById('portfolio-form-modal').classList.remove('hidden');
+        }
+
+        function openEditPortfolioModal(idx) {
+            const item = db.portfolio[idx];
+            document.getElementById('portfolio-modal-title').innerText = 'แก้ไขผลงาน';
+            document.getElementById('portfolio-edit-index').value = idx;
+            document.getElementById('port-modal-title').value = item.title;
+            document.getElementById('port-modal-category').value = item.category;
+            document.getElementById('port-modal-img').value = item.img;
+            document.getElementById('port-modal-desc').value = item.desc;
+            document.getElementById('portfolio-form-modal').classList.remove('hidden');
+        }
+
+        function closePortfolioModal() {
+            document.getElementById('portfolio-form-modal').classList.add('hidden');
+        }
+
+        function savePortfolioModalItem() {
+            const idx = parseInt(document.getElementById('portfolio-edit-index').value);
+            const title = document.getElementById('port-modal-title').value.trim() || 'ผลงานใหม่';
+            const category = document.getElementById('port-modal-category').value;
+            const img = document.getElementById('port-modal-img').value.trim() || 'https://placehold.co/600x400/fce7f3/db2777?text=Art';
+            const desc = document.getElementById('port-modal-desc').value.trim() || '-';
+
+            if (idx === -1) {
+                db.portfolio.unshift({ title, category, img, desc });
+            } else {
+                db.portfolio[idx] = { title, category, img, desc };
+            }
+            saveDB();
+            closePortfolioModal();
+        }
+
+        function deletePortfolioItem(idx) {
+            if (confirm('คุณต้องการลบผลงานนี้ใช่หรือไม่?')) {
+                db.portfolio.splice(idx, 1);
                 saveDB();
             }
         }
