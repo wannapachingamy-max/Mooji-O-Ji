@@ -1,496 +1,1540 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MistyStar Portfolio & Commission Hub</title>
-    <!-- Tailwind CSS CDN -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mooji O Ji - Portfolio & Services</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts: Prompt -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Prompt', 'sans-serif'],
-                    },
-                    colors: {
-                        pastelBlue: '#E0F2FE',
-                        pastelPink: '#FCE7F3',
-                        pastelPurple: '#F3E8FF',
-                    }
-                }
-            }
-        }
-    </script>
+    
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
+        :root {
+            --text-main: #645a60;
+            --text-accent: #f28baf;
+            --text-muted: #9c9096;
+            --white: #ffffff;
+        }
+
         body {
-            font-family: 'Prompt', sans-serif;
-            background: linear-gradient(135deg, #E0F7FA 0%, #E1F5FE 35%, #FCE4EC 70%, #F8BBD0 100%);
+            background: linear-gradient(180deg, #eef7fc 0%, #fdeaf2 100%);
             background-attachment: fixed;
+            color: var(--text-main);
+            font-family: 'Kanit', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
             min-height: 100vh;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.65);
+
+        .neu-flat {
+            background: rgba(255, 255, 255, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+            border: 2px solid rgba(255, 255, 255, 1); 
+            box-shadow: 10px 10px 30px rgba(242, 139, 175, 0.15), 
+                       -10px -10px 30px rgba(255, 255, 255, 0.9);
+            border-radius: 28px;
         }
-        .glass-nav {
+
+        .neu-flat-sm {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 2px solid rgba(255, 255, 255, 1);
+            box-shadow: 5px 5px 15px rgba(242, 139, 175, 0.12), 
+                       -5px -5px 15px rgba(255, 255, 255, 0.9);
+            border-radius: 16px;
+        }
+
+        .neu-pressed {
+            background: rgba(245, 235, 240, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: inset 4px 4px 8px rgba(242, 139, 175, 0.2), 
+                        inset -4px -4px 8px rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+        }
+        
+        .neu-btn {
             background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 1);
+            box-shadow: 5px 5px 12px rgba(242, 139, 175, 0.15), 
+                       -5px -5px 12px rgba(255, 255, 255, 0.9);
+            border-radius: 9999px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            backdrop-filter: blur(4px);
         }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
+
+        .neu-btn:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 6px 6px 15px rgba(242, 139, 175, 0.25), 
+                       -6px -6px 15px rgba(255, 255, 255, 1);
+            color: var(--text-accent);
         }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.3);
+
+        .neu-btn:active:not(:disabled), .neu-btn.active {
+            transform: translateY(1px) scale(0.98);
+            box-shadow: inset 3px 3px 6px rgba(210, 195, 205, 0.3), 
+                        inset -3px -3px 6px rgba(255, 255, 255, 0.7);
         }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(244, 114, 182, 0.4);
-            border-radius: 4px;
+        
+        .neu-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(244, 114, 182, 0.7);
+
+        .status-dot {
+            width: 10px; 
+            height: 10px; 
+            border-radius: 50%; 
+            display: inline-block;
+            margin-right: 6px;
+            box-shadow: 0 0 8px currentColor;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(1.2); }
+        }
+
+        .status-waiting { color: #f59e0b; background: #f59e0b; }
+        .status-sketching { color: #3b82f6; background: #3b82f6; }
+        .status-coloring { color: #d946ef; background: #d946ef; }
+        .status-completed { color: #10b981; background: #10b981; }
+
+        .floating { animation: float 4s ease-in-out infinite; }
+        .floating-delayed { animation: float 4s ease-in-out 2s infinite; }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .reveal { opacity: 0; transform: translateY(40px) scale(0.95); transition: all 0.7s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal.active { opacity: 1; transform: translateY(0) scale(1); }
+        
+        .hover-wiggle:hover { animation: wiggle 0.5s ease-in-out; }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(-5deg) scale(1.05); }
+            75% { transform: rotate(5deg) scale(1.05); }
+        }
+
+        .corner-icon { 
+            position: absolute; 
+            z-index: 10; 
+            filter: drop-shadow(2px 2px 4px rgba(242, 139, 175, 0.4)); 
+            animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards; 
+            opacity: 0; 
+            transform: scale(0); 
+        }
+        .corner-icon.tl { top: -15px; left: -15px; }
+        .corner-icon.tr { top: -15px; right: -15px; }
+        .corner-icon.bl { bottom: -15px; left: -15px; }
+        .corner-icon.br { bottom: -15px; right: -15px; }
+        
+        @keyframes pop-in {
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .bg-cloud {
+            position: absolute;
+            background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.3) 60%, transparent 100%);
+            border-radius: 50%;
+            filter: blur(25px);
+            opacity: 0.8;
+            animation: drift linear infinite;
+        }
+
+        @keyframes drift {
+            0% { transform: translateX(-30vw) scale(1); }
+            50% { transform: translateX(50vw) scale(1.1); }
+            100% { transform: translateX(120vw) scale(1); }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 1);
+            animation: shoot linear infinite;
+            opacity: 0;
+            transform: rotate(-45deg);
+        }
+        
+        .shooting-star::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            width: 150px;
+            height: 1px;
+            background: linear-gradient(270deg, rgba(255, 255, 255, 0.8), transparent);
+        }
+
+        @keyframes shoot {
+            0% { transform: rotate(-45deg) translateX(0); opacity: 1; }
+            15% { opacity: 1; }
+            100% { transform: rotate(-45deg) translateX(-1500px); opacity: 0; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.2); }
+        ::-webkit-scrollbar-thumb { background: rgba(210, 195, 205, 0.6); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--text-accent); }
+
+        #admin-panel, #public-view { display: none; }
+        
+        .modal-overlay {
+            background-color: rgba(100, 90, 96, 0.4);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+        }
+
+        h1, h2, h3 { font-weight: 600; letter-spacing: 0.5px; }
+        p { font-weight: 300; line-height: 1.6; }
+        
+        .lang-btn {
+            font-size: 0.8rem;
+            font-weight: bold;
+            padding: 4px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .lang-btn.active {
+            color: var(--text-accent);
+            box-shadow: inset 2px 2px 5px rgba(210, 195, 205, 0.4), 
+                        inset -2px -2px 5px rgba(255, 255, 255, 0.8);
+            background: rgba(255,255,255,0.3);
+        }
+        
+        #loading-overlay {
+            transition: opacity 0.5s ease;
+        }
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--text-accent);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
-<body class="text-slate-700 antialiased selection:bg-pink-200 selection:text-pink-800 flex flex-col items-center justify-start p-2 sm:p-4 lg:p-6">
+<body class="antialiased relative">
 
-    <!-- Container -->
-    <div class="w-full max-w-[1280px] min-h-[768px] glass-card rounded-3xl overflow-hidden flex flex-col shadow-2xl relative border-2 border-white/80 my-auto">
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-[-1]">
+        <div class="bg-cloud w-[400px] h-[250px] top-[10%] left-[-10%]" style="animation-duration: 60s; animation-delay: 0s;"></div>
+        <div class="bg-cloud w-[500px] h-[300px] top-[40%] right-[-15%]" style="animation-duration: 80s; animation-delay: -30s;"></div>
+        <div class="bg-cloud w-[350px] h-[200px] bottom-[10%] left-[20%]" style="animation-duration: 70s; animation-delay: -15s;"></div>
+        <div class="bg-cloud w-[450px] h-[280px] top-[70%] left-[-20%]" style="animation-duration: 90s; animation-delay: -45s;"></div>
 
-        <!-- Top Navigation Bar -->
-        <header class="glass-nav px-6 py-4 flex items-center justify-between sticky top-0 z-50">
-            <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-pink-300 to-sky-300 flex items-center justify-center text-white shadow-md">
-                    <i class="fa-solid fa-wand-magic-sparkles text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="font-bold text-lg text-slate-800 leading-tight">MistyStar Portfolio</h1>
-                    <p class="text-xs text-slate-500">Commission & Creative Showcase</p>
-                </div>
-            </div>
-
-            <!-- Navigation Tabs -->
-            <nav class="hidden md:flex items-center space-x-1 lg:space-x-2 bg-white/50 p-1.5 rounded-full border border-white/60 shadow-inner">
-                <button onclick="switchTab('portfolio')" id="nav-portfolio" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-white text-pink-600 shadow-sm">
-                    <i class="fa-solid fa-images mr-1.5"></i> ผลงาน
-                </button>
-                <button onclick="switchTab('pricing')" id="nav-pricing" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
-                    <i class="fa-solid fa-tag mr-1.5"></i> เรทราคา
-                </button>
-                <button onclick="switchTab('queue')" id="nav-queue" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
-                    <i class="fa-solid fa-calendar-check mr-1.5"></i> เช็คคิว
-                </button>
-                <button onclick="switchTab('rules')" id="nav-rules" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
-                    <i class="fa-solid fa-book-open mr-1.5"></i> กฎการใช้งาน
-                </button>
-                <button onclick="switchTab('contact')" id="nav-contact" class="nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40">
-                    <i class="fa-solid fa-paper-plane mr-1.5"></i> ช่องทางติดต่อ
-                </button>
-            </nav>
-
-            <!-- Right Controls: Status -->
-            <div class="flex items-center space-x-3">
-                <div class="hidden sm:flex items-center space-x-2 bg-emerald-100/80 border border-emerald-200 px-3 py-1.5 rounded-full">
-                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                    <span class="text-xs font-semibold text-emerald-700">Status: OPEN</span>
-                </div>
-            </div>
-        </header>
-
-        <!-- Mobile Hamburger Bar -->
-        <div class="md:hidden flex overflow-x-auto space-x-2 p-3 bg-white/40 border-b border-white/60">
-            <button onclick="switchTab('portfolio')" id="mob-nav-portfolio" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white text-pink-600 shadow-sm">ผลงาน</button>
-            <button onclick="switchTab('pricing')" id="mob-nav-pricing" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">เรทราคา</button>
-            <button onclick="switchTab('queue')" id="mob-nav-queue" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">เช็คคิว</button>
-            <button onclick="switchTab('rules')" id="mob-nav-rules" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">กฎการใช้งาน</button>
-            <button onclick="switchTab('contact')" id="mob-nav-contact" class="mob-nav-btn px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap bg-white/50 text-slate-600">ติดต่อ</button>
+        <div class="shooting-star top-[5%] left-[80%]" style="animation-delay: 0s; animation-duration: 4s;"></div>
+        <div class="shooting-star top-[30%] left-[60%]" style="animation-delay: 2.5s; animation-duration: 3.5s;"></div>
+        <div class="shooting-star top-[15%] left-[40%]" style="animation-delay: 5s; animation-duration: 4.5s;"></div>
+        <div class="shooting-star top-[50%] left-[90%]" style="animation-delay: 1.5s; animation-duration: 5s;"></div>
+        <div class="shooting-star top-[10%] left-[95%]" style="animation-delay: 7s; animation-duration: 3.8s;"></div>
+    </div>
+    
+    <div id="loading-overlay" class="fixed inset-0 z-[200] flex items-center justify-center modal-overlay bg-white/80">
+        <div class="flex flex-col items-center">
+            <div class="spinner mb-4"></div>
+            <p class="text-[var(--text-accent)] font-bold text-lg animate-pulse">กำลังโหลดข้อมูล...</p>
         </div>
+    </div>
 
-        <!-- Main Scrollable Content Area -->
-        <main class="flex-1 overflow-y-auto p-6 lg:p-8 space-y-8">
+    <div id="custom-dialog" class="fixed inset-0 z-[100] hidden items-center justify-center modal-overlay">
+        <div class="neu-flat p-8 max-w-sm w-full mx-4 text-center transform transition-all">
+            <div id="dialog-icon" class="text-4xl mb-4"></div>
+            <h3 id="dialog-title" class="text-xl font-bold text-[var(--text-accent)] mb-2"></h3>
+            <p id="dialog-message" class="text-[var(--text-main)] mb-6 whitespace-pre-line"></p>
+            <div class="flex justify-center gap-4" id="dialog-buttons"></div>
+        </div>
+    </div>
 
-            <!-- Hero Banner Section -->
-            <section class="glass-card rounded-3xl p-6 lg:p-8 relative overflow-hidden flex flex-col md:flex-row items-center justify-between border border-white/80 shadow-lg">
-                <div class="absolute -right-16 -bottom-16 w-64 h-64 bg-pink-200/40 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -left-16 -top-16 w-64 h-64 bg-sky-200/40 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div class="z-10 max-w-xl text-center md:text-left mb-6 md:mb-0">
-                    <span class="inline-block px-3 py-1 rounded-full bg-pink-100 text-pink-600 text-xs font-semibold mb-3 tracking-wide">
-                        ✨ Welcome to My Creative Space ✨
-                    </span>
-                    <h2 class="text-3xl lg:text-4xl font-bold text-slate-800 mb-3 tracking-tight">
-                        Transforming Imagination into Pastel Artistry
-                    </h2>
-                    <p class="text-slate-600 text-sm lg:text-base leading-relaxed mb-6">
-                        ยินดีต้อนรับเข้าสู่เว็บไซต์รวบรวมผลงานและรับวาดภาพคอมมิชชั่น สไตล์ละมุน ฟีลกู๊ด โทนสีพาสเทลสดใส พร้อมเนรมิตจินตนาการของคุณให้ออกมาเป็นจริงแล้ววันนี้!
-                    </p>
-                    <div class="flex flex-wrap gap-3 justify-center md:justify-start">
-                        <button onclick="switchTab('pricing')" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-medium text-sm shadow-md hover:opacity-90 transition-all transform hover:-translate-y-0.5">
-                            <i class="fa-solid fa-sparkles mr-2"></i> ดูเรทราคาเลย
-                        </button>
-                        <button onclick="switchTab('queue')" class="px-6 py-2.5 rounded-2xl bg-white/80 border border-white text-slate-700 font-medium text-sm shadow-sm hover:bg-white transition-all">
-                            <i class="fa-solid fa-calendar-days mr-2"></i> เช็คคิวงาน
-                        </button>
+    <div id="public-view" class="w-full">
+        
+        <nav class="fixed top-0 w-full z-50 pt-4 px-4 pb-3" style="background: linear-gradient(180deg, rgba(238, 247, 252, 0.95) 0%, rgba(238, 247, 252, 0) 100%);">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2 cursor-pointer hover:scale-105 transition-transform" onclick="scrollToTop()">
+                    <i class="fa-solid fa-store text-[var(--text-accent)] text-2xl drop-shadow-md"></i>
+                    <span class="text-2xl font-bold tracking-wider text-[var(--text-main)]" id="nav-brand">MOOJI O JI</span>
+                </div>
+                
+                <div class="flex flex-wrap justify-center items-center gap-2 md:gap-3">
+                    <a href="#portfolio" class="neu-btn px-4 py-2 text-sm md:text-base font-medium flex items-center gap-2" data-i18n="navPortfolio">
+                        <i class="fa-regular fa-image"></i> ผลงาน
+                    </a>
+                    <a href="#prices" class="neu-btn px-4 py-2 text-sm md:text-base font-medium flex items-center gap-2" data-i18n="navPrices">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> เรทราคา
+                    </a>
+                    <a href="#queue" class="neu-btn px-4 py-2 text-sm md:text-base font-medium flex items-center gap-2" data-i18n="navQueue">
+                        <i class="fa-regular fa-calendar-check"></i> คิวงาน
+                    </a>
+                    <a href="#terms" class="neu-btn px-4 py-2 text-sm md:text-base font-medium flex items-center gap-2" data-i18n="navTerms">
+                        <i class="fa-solid fa-file-contract"></i> กฎการใช้งาน
+                    </a>
+                    <a href="#contact" class="neu-btn px-4 py-2 text-sm md:text-base font-medium flex items-center gap-2 !bg-[var(--text-accent)] text-white !shadow-md border-2 border-white/40 hover:!text-white" data-i18n="navContact">
+                        ติดต่อสอบถาม
+                    </a>
+                    
+                    <div class="flex items-center gap-1 neu-flat-sm p-1 ml-2">
+                        <button onclick="setLanguage('th')" id="btn-lang-th" class="lang-btn active">TH</button>
+                        <button onclick="setLanguage('en')" id="btn-lang-en" class="lang-btn">EN</button>
                     </div>
                 </div>
+            </div>
+        </nav>
 
-                <!-- Shop Profile Avatar -->
-                <div class="z-10 flex flex-col items-center">
-                    <div class="relative w-36 h-36 lg:w-44 lg:h-44 rounded-full p-1.5 bg-gradient-to-tr from-sky-300 via-purple-300 to-pink-300 shadow-xl">
-                        <img src="https://placehold.co/300x300/fbcfe8/db2777?text=Misty+Star" alt="Shop Avatar" class="w-full h-full object-cover rounded-full bg-white">
-                    </div>
-                    <div class="mt-3 text-center">
-                        <h3 class="font-bold text-slate-800 text-base">@MistyStar_Art</h3>
-                        <p class="text-xs text-slate-500">Illustrator & Graphic Designer</p>
-                    </div>
+        <main class="max-w-6xl mx-auto px-6 pt-44 pb-24">
+            
+            <section id="hero" class="flex flex-col items-center text-center mb-24 relative">
+                <i class="fa-solid fa-star floating text-yellow-300 text-3xl absolute top-0 left-10 opacity-80 drop-shadow-md"></i>
+                <i class="fa-solid fa-cloud floating-delayed text-white text-5xl absolute top-10 right-10 opacity-90 drop-shadow-lg"></i>
+                <i class="fa-solid fa-heart floating text-pink-300 text-2xl absolute bottom-10 left-20 opacity-70"></i>
+                
+                <div class="neu-flat-sm px-6 py-2 inline-flex items-center gap-3 mb-8 hover:scale-105 transition-transform cursor-default">
+                    <div class="status-dot status-completed"></div>
+                    <span class="text-sm font-medium text-[var(--text-main)]" id="hero-status">เปิดรับงาน (Commissions Open)</span>
+                </div>
+
+                <div class="neu-flat w-full max-w-4xl p-10 md:p-16 relative overflow-hidden group">
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6 text-[var(--text-main)]">
+                        <span data-i18n="heroWelcome">ยินดีต้อนรับสู่</span> <span class="text-[var(--text-accent)]" id="hero-title">MOOJI O JI</span>
+                    </h1>
+                    <p class="text-lg md:text-xl text-[var(--text-muted)] max-w-2xl mx-auto mb-10 leading-relaxed" id="hero-tagline">
+                        พอร์ตโฟลิโอและอัตราค่าบริการ สามารถตรวจสอบรายละเอียดและข้อตกลงเบื้องต้นได้ที่นี่ค่ะ ยินดีให้บริการนะคะ
+                    </p>
+                    <a href="#prices" class="neu-btn inline-flex items-center gap-2 px-8 py-3 text-lg font-medium text-[var(--text-main)]">
+                        <i class="fa-solid fa-calculator text-[var(--text-accent)]"></i> <span data-i18n="heroCalcBtn">ดูเรทราคา</span>
+                    </a>
+                </div>
+                
+                <div class="mt-14 animate-bounce text-[var(--text-muted)] opacity-60">
+                    <i class="fa-solid fa-chevron-down text-2xl"></i>
                 </div>
             </section>
 
-            <!-- 1. Portfolio Section -->
-            <div id="section-portfolio" class="content-section space-y-6">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h3 class="text-2xl font-bold text-slate-800 flex items-center">
-                            <i class="fa-solid fa-images text-pink-400 mr-2.5"></i> ผลงานที่ผ่านมา (Portfolio)
-                        </h3>
-                        <p class="text-xs text-slate-500 mt-0.5">รวมผลงานตัวอย่างลายเส้นและโทนสีต่างๆ</p>
-                    </div>
+            <section id="portfolio" class="mb-24 scroll-mt-36">
+                <div class="flex items-center gap-4 mb-10 justify-center">
+                    <i class="fa-solid fa-sparkles text-[var(--text-accent)] text-xl"></i>
+                    <h2 class="text-3xl font-bold text-center text-[var(--text-accent)]" data-i18n="sectionPortfolio">ตัวอย่างผลงาน</h2>
+                    <i class="fa-solid fa-sparkles text-[var(--text-accent)] text-xl"></i>
+                </div>
+                
+                <div id="public-portfolio-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                </div>
+            </section>
+
+            <section id="prices" class="mb-24 scroll-mt-36">
+                <div class="flex items-center gap-4 mb-10 justify-center">
+                    <i class="fa-solid fa-star text-[var(--text-accent)] text-xl"></i>
+                    <h2 class="text-3xl font-bold text-center text-[var(--text-accent)]" data-i18n="sectionPrices">อัตราค่าบริการ</h2>
+                    <i class="fa-solid fa-star text-[var(--text-accent)] text-xl"></i>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5" id="portfolio-grid">
-                    <div class="glass-card rounded-3xl overflow-hidden border border-white/80 shadow-sm bg-white/60">
-                        <img src="https://placehold.co/600x400/e0f2fe/0284c7?text=Chibi+Dream" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h4 class="font-bold text-slate-800 text-sm">Sweet Dream Chibi Set</h4>
-                            <p class="text-xs text-slate-500 mt-1">งานวาดสไตล์จิบิ น่ารักสดใส</p>
+                <div id="public-prices-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+                </div>
+            </section>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-24">
+                
+                <section id="queue" class="scroll-mt-36 relative">
+                    <i class="fa-solid fa-calendar-check corner-icon tl text-blue-300 text-4xl opacity-90" style="top: 30px; left: -10px; animation-delay: 0.5s;"></i>
+                    <div class="flex items-center gap-3 mb-6 relative z-10 pl-6">
+                        <div class="w-10 h-10 rounded-full bg-[var(--text-accent)] text-white flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-clipboard-list"></i>
                         </div>
+                        <h2 class="text-2xl font-bold text-[var(--text-main)]" data-i18n="sectionQueue">สถานะคิวงาน</h2>
                     </div>
-                    <div class="glass-card rounded-3xl overflow-hidden border border-white/80 shadow-sm bg-white/60">
-                        <img src="https://placehold.co/600x400/fce7f3/db2777?text=Bust-Up" class="w-full h-48 object-cover">
-                        <div class="p-4">
-                            <h4 class="font-bold text-slate-800 text-sm">Magical Princess</h4>
-                            <p class="text-xs text-slate-500 mt-1">ภาพครึ่งตัวเน้นดีเทลชุด</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 2. Pricing Section -->
-            <div id="section-pricing" class="content-section hidden space-y-6">
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
-                        <i class="fa-solid fa-tags text-pink-400 mr-2.5"></i> เรทราคาคอมมิชชั่น (Pricing Rates)
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">ข้อมูลซิงค์ตรงจาก Google Sheets อัปเดตราคาอัตโนมัติ</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="pricing-container">
-                    <div class="glass-card rounded-3xl p-6 text-center text-slate-400">กำลังโหลดเรทราคาจาก Google Sheets...</div>
-                </div>
-
-                <div class="glass-card rounded-2xl p-5 border border-white/80 bg-white/40 flex flex-col md:flex-row items-center justify-between text-xs text-slate-600">
-                    <div class="flex items-center space-x-3 mb-3 md:mb-0">
-                        <i class="fa-solid fa-circle-info text-pink-500 text-xl"></i>
-                        <div>
-                            <span class="font-bold text-slate-800">รายละเอียดเพิ่มเติม / Add-ons:</span> เพิ่มตัวละคร +100%, พร็อพชิ้นใหญ่ +100-300 บาท, เชิงพาณิชย์ x2
-                        </div>
-                    </div>
-                    <button onclick="switchTab('queue')" class="px-4 py-2 rounded-xl bg-white text-pink-600 font-bold shadow-sm hover:bg-pink-50">ตรวจสอบคิวก่อนจอง</button>
-                </div>
-            </div>
-
-            <!-- 3. Queue Section -->
-            <div id="section-queue" class="content-section hidden space-y-6">
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
-                        <i class="fa-solid fa-calendar-check text-pink-400 mr-2.5"></i> ตารางเช็คคิวงาน (Queue Status)
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">ดึงข้อมูลสถานะคิวล่าสุดแบบเรียลไทม์จาก Google Sheets</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div class="glass-card rounded-3xl p-6 border-2 border-sky-200 flex items-center justify-between bg-gradient-to-r from-sky-50/80 to-white">
-                        <div>
-                            <span class="text-xs font-semibold text-sky-600 uppercase tracking-wider">คิวทั้งหมดในระบบ</span>
-                            <div class="text-4xl font-extrabold text-slate-800 mt-1" id="stat-total-slots">0 <span class="text-sm font-normal text-slate-500">คิว</span></div>
-                        </div>
-                        <div class="w-16 h-16 rounded-2xl bg-sky-200/70 flex items-center justify-center text-sky-700 text-2xl shadow-inner"><i class="fa-solid fa-calendar-days"></i></div>
-                    </div>
-
-                    <div class="glass-card rounded-3xl p-6 border-2 border-pink-200 flex items-center justify-between bg-gradient-to-r from-pink-50/80 to-white">
-                        <div>
-                            <span class="text-xs font-semibold text-pink-600 uppercase tracking-wider">คิวว่าง (Available Slots)</span>
-                            <div class="text-4xl font-extrabold text-pink-600 mt-1" id="stat-available-slots">0 <span class="text-sm font-normal text-slate-500">คิว</span></div>
-                        </div>
-                        <div class="w-16 h-16 rounded-2xl bg-pink-200/70 flex items-center justify-center text-pink-700 text-2xl shadow-inner"><i class="fa-solid fa-circle-check"></i></div>
-                    </div>
-                </div>
-
-                <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm">
-                    <h4 class="font-bold text-slate-800 text-sm mb-4 flex items-center justify-between">
-                        <span>รายชื่อคิวปัจจุบัน (Current Queue List)</span>
-                        <span class="text-xs font-normal text-slate-500" id="queue-count-summary">กำลังโหลดข้อมูล...</span>
-                    </h4>
-
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-xs">
+                    <div class="neu-flat p-6 overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
                             <thead>
-                                <tr class="border-b border-white/80 text-slate-500">
-                                    <th class="py-3 px-4 font-semibold">คิวที่</th>
-                                    <th class="py-3 px-4 font-semibold">ชื่อผู้จอง (Client)</th>
-                                    <th class="py-3 px-4 font-semibold">ประเภทงาน</th>
-                                    <th class="py-3 px-4 font-semibold">สถานะงาน</th>
+                                <tr class="text-[var(--text-muted)] border-b border-white/70">
+                                    <th class="pb-3 px-2 font-medium" data-i18n="tableQueueNo">ลำดับ</th>
+                                    <th class="pb-3 px-2 font-medium" data-i18n="tableQueueName">ชื่องาน/ลูกค้า</th>
+                                    <th class="pb-3 px-2 font-medium" data-i18n="tableQueueDate">กำหนดส่ง</th>
+                                    <th class="pb-3 px-2 font-medium" data-i18n="tableQueueStatus">สถานะ</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-white/40 text-slate-700" id="queue-table-body">
-                                <tr><td colspan="4" class="py-4 text-center text-slate-400">กำลังเชื่อมต่อ Google Sheets...</td></tr>
+                            <tbody id="public-queue-list">
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <section id="terms" class="scroll-mt-36 relative">
+                    <i class="fa-solid fa-thumbtack corner-icon tr text-yellow-400 text-4xl opacity-90" style="top: 30px; right: -10px; animation-delay: 0.7s;"></i>
+                    <div class="flex items-center gap-3 mb-6 relative z-10 pr-6">
+                        <div class="w-10 h-10 rounded-full bg-[var(--text-accent)] text-white flex items-center justify-center shadow-md">
+                            <i class="fa-solid fa-file-contract"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-[var(--text-main)]" data-i18n="sectionTerms">กฎการใช้งาน</h2>
+                    </div>
+                    <div class="neu-flat p-6 lg:p-8">
+                        <ul id="public-terms-list" class="space-y-4 text-[var(--text-main)]">
+                        </ul>
+                    </div>
+                </section>
+            </div>
+
+            <section id="contact" class="scroll-mt-36 max-w-3xl mx-auto text-center">
+                <h2 class="text-3xl font-bold text-[var(--text-accent)] mb-8" data-i18n="sectionContact">ช่องทางการติดต่อ</h2>
+                <div class="flex flex-wrap justify-center gap-6" id="public-contacts">
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="py-10 text-center text-[var(--text-muted)] text-sm relative mt-10">
+            <p>&copy; 2026 <span id="footer-brand">Mooji O Ji</span>. All rights reserved.</p>
+            
+            <button onclick="promptAdminLogin()" id="login-btn" class="mt-4 neu-btn inline-flex items-center gap-2 px-4 py-2 text-xs opacity-70 hover:opacity-100">
+                <i class="fa-solid fa-gear"></i> แอดมิน (Admin)
+            </button>
+        </footer>
+    </div>
+
+    <div id="admin-panel" class="w-full min-h-screen flex flex-col md:flex-row bg-[#f8f9fa] relative z-50">
+        
+        <aside class="w-full md:w-64 flex-shrink-0 bg-white shadow-xl z-40 relative">
+            <div class="p-6 border-b border-gray-100">
+                <h2 class="text-2xl font-bold text-[var(--text-accent)]"><i class="fa-solid fa-gear"></i> ระบบแอดมิน</h2>
+                <p class="text-xs text-gray-400 mt-1">Dashboard</p>
+            </div>
+            <nav class="p-4 space-y-2" id="admin-nav">
+                <button onclick="switchAdminTab('settings')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all active-tab bg-pink-50 text-[var(--text-accent)] font-medium"><i class="fa-solid fa-sliders w-6"></i> ตั้งค่าทั่วไป</button>
+                <button onclick="switchAdminTab('portfolio')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-gray-50 text-gray-600"><i class="fa-solid fa-images w-6"></i> จัดการผลงาน</button>
+                <button onclick="switchAdminTab('prices')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-gray-50 text-gray-600"><i class="fa-solid fa-tags w-6"></i> จัดการเรทราคา</button>
+                <button onclick="switchAdminTab('queue')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-gray-50 text-gray-600"><i class="fa-solid fa-list-ol w-6"></i> จัดการคิวงาน</button>
+                <button onclick="switchAdminTab('terms')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-gray-50 text-gray-600"><i class="fa-solid fa-scale-balanced w-6"></i> จัดการกฎการใช้งาน</button>
+                <button onclick="switchAdminTab('contacts')" class="admin-tab-btn w-full text-left px-4 py-3 rounded-xl transition-all hover:bg-gray-50 text-gray-600"><i class="fa-solid fa-address-book w-6"></i> ช่องทางติดต่อ</button>
+            </nav>
+            <div class="p-4 absolute bottom-0 w-full border-t border-gray-100 bg-white">
+                <button onclick="logoutAdmin()" id="logout-btn" class="w-full py-2 bg-red-50 text-red-500 rounded-lg font-medium hover:bg-red-100 transition-colors"><i class="fa-solid fa-right-from-bracket"></i> ออกจากระบบหน้าเว็บ</button>
+            </div>
+        </aside>
+
+        <main class="flex-grow p-6 md:p-10 h-screen overflow-y-auto bg-gray-50">
+            <div class="max-w-5xl mx-auto">
+                <div class="flex justify-between items-center mb-8">
+                    <h1 id="admin-page-title" class="text-3xl font-bold text-gray-800">ตั้งค่าทั่วไป</h1>
+                    <button onclick="window.location.reload()" class="bg-white shadow-sm px-4 py-2 rounded-lg text-sm font-medium text-gray-600 hover:text-blue-500 transition-colors"><i class="fa-solid fa-eye"></i> ดูเว็บไซต์ (Refresh)</button>
+                </div>
+
+                <div id="tab-settings" class="admin-tab-content bg-white shadow-sm rounded-2xl p-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-700">ชื่อเว็บไซต์ (Site Name)</label>
+                            <input type="text" id="edit-site-name" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none focus:ring-2 ring-pink-300 border border-gray-200">
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">สถานะรับงาน (TH)</label>
+                                <input type="text" id="edit-status-th" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none focus:ring-2 ring-pink-300 border border-gray-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">สถานะรับงาน (EN)</label>
+                                <input type="text" id="edit-status-en" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none focus:ring-2 ring-pink-300 border border-gray-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">คำโปรยต้อนรับ (TH)</label>
+                                <textarea id="edit-tagline-th" rows="3" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none focus:ring-2 ring-pink-300 border border-gray-200"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">คำโปรยต้อนรับ (EN)</label>
+                                <textarea id="edit-tagline-en" rows="3" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none focus:ring-2 ring-pink-300 border border-gray-200"></textarea>
+                            </div>
+                        </div>
+                        <button id="btn-save-settings" onclick="saveSettings()" class="bg-[var(--text-accent)] text-white px-8 py-3 rounded-xl font-medium shadow-md hover:bg-pink-400 transition-colors">บันทึกการตั้งค่า</button>
+                    </div>
+                </div>
+
+                <div id="tab-portfolio" class="admin-tab-content hidden">
+                    <div class="bg-white shadow-sm rounded-2xl p-8 mb-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">เพิ่มผลงานใหม่</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">อัปโหลดรูปภาพผลงาน (อัตโนมัติบีบอัด)</label>
+                                <input type="file" id="port-img-file" accept="image/*" class="w-full bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-50 file:text-[var(--text-accent)] file:font-medium file:cursor-pointer">
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-gray-700">ชื่อผลงาน (TH)</label>
+                                    <input type="text" id="port-title-th" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium mb-2 text-gray-700">ชื่อผลงาน (EN)</label>
+                                    <input type="text" id="port-title-en" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                                </div>
+                            </div>
+                            <button id="btn-add-portfolio" onclick="addPortfolioItem()" class="bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">อัปโหลดและเพิ่มผลงาน</button>
+                        </div>
+                    </div>
+                    <div class="bg-white shadow-sm rounded-2xl p-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">รายการผลงานทั้งหมด</h3>
+                        <div id="admin-portfolio-list" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-prices" class="admin-tab-content hidden">
+                    <div class="bg-white shadow-sm rounded-2xl p-8 mb-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">เพิ่มแพ็กเกจราคา</h3>
+                        <div class="space-y-4 mb-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">อัปโหลดรูปภาพบริการ (เสริม)</label>
+                                <input type="file" id="price-img-file" accept="image/*" class="w-full bg-gray-50 px-4 py-3 rounded-xl border border-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-pink-50 file:text-[var(--text-accent)] file:font-medium file:cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">ชื่อบริการ (TH)</label>
+                                <input type="text" id="price-name-th" placeholder="เช่น Full Body" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">ชื่อบริการ (EN)</label>
+                                <input type="text" id="price-name-en" placeholder="e.g. Full Body" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            </div>
+                            <div class="md:col-span-2">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">ราคา (เช่น 1,500+)</label>
+                                <input type="text" id="price-amt" placeholder="เช่น 1,500+" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">รายละเอียด (TH) - คั่นด้วยลูกน้ำ (,)</label>
+                                <textarea id="price-desc-th" rows="2" placeholder="ลงสีเต็มรูปแบบ, พื้นหลังใส" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium mb-2 text-gray-700">รายละเอียด (EN) - คั่นด้วยลูกน้ำ (,)</label>
+                                <textarea id="price-desc-en" rows="2" placeholder="Full color, Clear BG" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200"></textarea>
+                            </div>
+                        </div>
+                        <button id="btn-add-price" onclick="addPriceItem()" class="mt-4 bg-blue-500 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-600 transition-colors">อัปโหลดและเพิ่มบริการ</button>
+                    </div>
+                    <div class="space-y-4" id="admin-prices-list">
+                    </div>
+                </div>
+
+                <div id="tab-queue" class="admin-tab-content hidden">
+                    <div class="bg-white shadow-sm rounded-2xl p-8 mb-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">เพิ่มคิวงาน</h3>
+                        <div class="flex flex-col md:flex-row gap-4 items-end">
+                            <div class="flex-grow">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">ชื่องาน / ลูกค้า</label>
+                                <input type="text" id="queue-name-input" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            </div>
+                            <div class="w-full md:w-1/4">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">กำหนดส่ง</label>
+                                <input type="text" id="queue-date-input" placeholder="เช่น 15 ต.ค. หรือ TBA" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            </div>
+                            <div class="w-full md:w-1/4">
+                                <label class="block text-sm font-medium mb-2 text-gray-700">สถานะ</label>
+                                <select id="queue-status-input" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200 appearance-none">
+                                    <option value="waiting">รอคิว (Waiting)</option>
+                                    <option value="sketching">ร่างภาพ (Sketching)</option>
+                                    <option value="coloring">ลงสี (Coloring)</option>
+                                    <option value="completed">เสร็จสิ้น (Completed)</option>
+                                </select>
+                            </div>
+                            <button id="btn-add-queue" onclick="addQueueItem()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors">เพิ่มคิว</button>
+                        </div>
+                    </div>
+                    <div class="bg-white shadow-sm rounded-2xl p-6 overflow-hidden">
+                         <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b border-gray-200 text-gray-500 text-sm">
+                                    <th class="pb-2 font-medium">ชื่อลูกค้า</th>
+                                    <th class="pb-2 font-medium">สถานะ</th>
+                                    <th class="pb-2 font-medium text-right">จัดการ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-queue-list">
                             </tbody>
                         </table>
                     </div>
                 </div>
+
+                <div id="tab-terms" class="admin-tab-content hidden">
+                    <div class="bg-white shadow-sm rounded-2xl p-8 mb-8">
+                        <h3 class="text-lg font-bold mb-4 text-gray-800">เพิ่มกฎการใช้งาน</h3>
+                        <div class="flex flex-col gap-4">
+                            <input type="text" id="term-input-th" placeholder="พิมพ์ข้อตกลง (ภาษาไทย)..." class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            <input type="text" id="term-input-en" placeholder="พิมพ์ข้อตกลง (English)..." class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                            <button id="btn-add-term" onclick="addTerm()" class="bg-blue-500 text-white px-6 py-3 rounded-xl font-medium hover:bg-blue-600 transition-colors w-32">เพิ่มกฎ</button>
+                        </div>
+                    </div>
+                    <ul id="admin-terms-list" class="space-y-3">
+                    </ul>
+                </div>
+
+                <div id="tab-contacts" class="admin-tab-content hidden bg-white shadow-sm rounded-2xl p-8">
+                    <div class="space-y-6">
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-700"><i class="fa-brands fa-facebook text-blue-500"></i> Facebook URL</label>
+                            <input type="text" id="edit-fb" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-700"><i class="fa-brands fa-line text-green-500"></i> LINE URL / ID</label>
+                            <input type="text" id="edit-line" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-700"><i class="fa-brands fa-instagram text-pink-500"></i> Instagram URL</label>
+                            <input type="text" id="edit-ig" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium mb-2 text-gray-700"><i class="fa-solid fa-envelope text-gray-500"></i> Email</label>
+                            <input type="email" id="edit-email" class="w-full bg-gray-50 px-4 py-3 rounded-xl outline-none border border-gray-200">
+                        </div>
+                        <button id="btn-save-contacts" onclick="saveContacts()" class="bg-[var(--text-accent)] text-white px-8 py-3 rounded-xl font-medium shadow-md hover:bg-pink-400 transition-colors">บันทึกช่องทางติดต่อ</button>
+                    </div>
+                </div>
+
             </div>
-
-            <!-- 4. Rules Section -->
-            <div id="section-rules" class="content-section hidden space-y-6">
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
-                        <i class="fa-solid fa-book-open text-pink-400 mr-2.5"></i> กฎการใช้งานและข้อตกลง (Terms & Rules)
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">โปรดอ่านและทำความเข้าใจก่อนทำการบรีฟและจองคิวคอมมิชชั่นนะคะ</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm flex items-start space-x-4">
-                        <div class="w-10 h-10 rounded-2xl bg-sky-100 flex-shrink-0 flex items-center justify-center text-sky-600 font-bold text-sm">01</div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">ลิขสิทธิ์และการใช้งาน (Copyright)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">งานคอมมิชชั่นใช้สำหรับส่วนตัวเท่านั้น หากใช้เชิงพาณิชย์แจ้งล่วงหน้า (ราคา x2)</p>
-                        </div>
-                    </div>
-                    <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-sm flex items-start space-x-4">
-                        <div class="w-10 h-10 rounded-2xl bg-pink-100 flex-shrink-0 flex items-center justify-center text-pink-600 font-bold text-sm">02</div>
-                        <div>
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">ขั้นตอนการชำระเงิน (Payment)</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">ชำระเต็มจำนวนหรือมัดจำ 50% ก่อนเริ่มงาน ไม่คืนเงินทุกกรณีหลังร่างภาพ</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 5. Contact & Brief Section -->
-            <div id="section-contact" class="content-section hidden space-y-6">
-                <div>
-                    <h3 class="text-2xl font-bold text-slate-800 flex items-center">
-                        <i class="fa-solid fa-paper-plane text-pink-400 mr-2.5"></i> ช่องทางติดต่อและส่งบรีฟงาน
-                    </h3>
-                    <p class="text-xs text-slate-500 mt-0.5">กรอกฟอร์มด้านล่าง ข้อมูลจะถูกส่งตรงเข้า Google Sheets ของร้านทันที!</p>
-                </div>
-
-                <div class="glass-card rounded-3xl p-6 border border-white/90 shadow-md">
-                    <h4 class="font-bold text-slate-800 text-sm mb-2 flex items-center">
-                        <i class="fa-solid fa-message text-pink-400 mr-2"></i> ฟอร์มส่งบรีฟงานเข้า Google Sheets
-                    </h4>
-                    <p class="text-xs text-slate-500 mb-4">กรอกรายละเอียดให้ครบถ้วนแล้วกดส่งข้อมูลได้เลยค่ะ</p>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">ชื่อเล่นลูกค้า / นามปากกา:</label>
-                            <input type="text" id="brief-name" placeholder="เช่น คุณน้ำ หรือ Misty" class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300">
-                        </div>
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">รูปแบบที่ต้องการจอง:</label>
-                            <select id="brief-type" class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300">
-                                <option value="จิบิ (Chibi)">จิบิ (Chibi Style)</option>
-                                <option value="ครึ่งตัว (Bust-up)">ครึ่งตัว (Bust-up)</option>
-                                <option value="เต็มตัว (Full Body)">เต็มตัว (Full Body)</option>
-                            </select>
-                        </div>
-                        <div class="md:col-span-2">
-                            <label class="block font-semibold text-slate-700 mb-1">รายละเอียดตัวละคร / เรฟเฟอเรนซ์:</label>
-                            <textarea id="brief-details" rows="3" placeholder="ระบุสีผม สีตา ท่าทาง หรือลิงก์รูปภาพตัวละคร..." class="w-full px-3.5 py-2 rounded-xl bg-white/70 border border-white focus:outline-none focus:ring-2 focus:ring-pink-300"></textarea>
-                        </div>
-                    </div>
-
-                    <div class="mt-4 flex items-center justify-between">
-                        <span id="submit-status" class="text-xs font-semibold opacity-0 transition-opacity"></span>
-                        <button onclick="submitBriefToSheet()" class="px-6 py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-semibold text-xs shadow-md hover:opacity-90 transition-all flex items-center">
-                            <i class="fa-solid fa-cloud-arrow-up mr-2"></i> ส่งบรีฟเข้า Google Sheets
-                        </button>
-                    </div>
-                </div>
-            </div>
-
         </main>
-
-        <!-- Footer -->
-        <footer class="glass-nav px-6 py-3 text-center text-xs text-slate-500 flex items-center justify-between">
-            <p>© 2026 MistyStar Portfolio. All rights reserved.</p>
-            <div class="flex space-x-4"><a href="#" class="hover:text-pink-600">Privacy</a><a href="#" class="hover:text-pink-600">Terms</a></div>
-        </footer>
-
     </div>
 
-    <!-- SCRIPT CONNECTIONS WITH NEW GOOGLE SHEETS URL -->
     <script>
-        // อัปเดต Web App URL ใหม่ของคุณเรียบร้อยแล้ว
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbytLgx5Uec-vFvKuhNo2VYYgA5npU6A907IUDvZ8lL7ksqBVV0R5zV6IueOhQdAsyn7bQ/exec';
+        const SUPABASE_URL = 'https://glvhymchxrgugstbnwtt.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdsdmh5bWNoeHJndWdzdGJud3R0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA4NjE5NzEsImV4cCI6MjEwNjQzNzk3MX0.nzSAvVxWRpSuLjqpEUNAPr-s7eYu7cRx5i4hwdHWFag';
+        
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let appData = {
-            queues: [],
-            pricing: []
+        let appState = {
+            isAdmin: false,
+            currentLang: 'th',
+            data: {
+                settings: null,
+                portfolio: [],
+                prices: [],
+                queue: [],
+                terms: [],
+            }
         };
 
-        // 1. ฟังก์ชันดึงข้อมูลจาก Google Sheets
-        async function fetchGoogleSheetData() {
-            try {
-                const response = await fetch(WEB_APP_URL + '?action=getData');
-                const data = await response.json();
-                if (data.queues) appData.queues = data.queues;
-                if (data.pricing) appData.pricing = data.pricing;
-                
-                renderQueueData();
-                renderPricingData();
-            } catch (error) {
-                console.error('ไม่สามารถดึงข้อมูลจาก Google Sheets ได้:', error);
+        const dict = {
+            th: {
+                navPortfolio: '<i class="fa-regular fa-image"></i> ผลงาน',
+                navPrices: '<i class="fa-solid fa-file-invoice-dollar"></i> เรทราคา',
+                navQueue: '<i class="fa-regular fa-calendar-check"></i> คิวงาน',
+                navTerms: '<i class="fa-solid fa-file-contract"></i> กฎการใช้งาน',
+                navContact: 'ติดต่อสอบถาม',
+                heroWelcome: 'ยินดีต้อนรับสู่',
+                heroCalcBtn: 'ดูเรทราคา',
+                sectionPortfolio: 'ตัวอย่างผลงาน',
+                sectionPrices: 'อัตราค่าบริการ',
+                sectionQueue: 'สถานะคิวงาน',
+                tableQueueNo: 'ลำดับ',
+                tableQueueName: 'ชื่องาน/ลูกค้า',
+                tableQueueDate: 'กำหนดส่ง',
+                tableQueueStatus: 'สถานะ',
+                sectionTerms: 'กฎการใช้งาน',
+                sectionContact: 'ช่องทางการติดต่อ',
+                noPortfolio: 'ยังไม่มีผลงาน',
+                noPrices: 'ยังไม่ได้กำหนดราคา',
+                btnHire: 'สนใจจ้างงาน',
+                queueEmpty: 'คิวว่าง สามารถติดต่อได้เลยค่ะ',
+                noTerms: 'ไม่มีข้อกำหนดเพิ่มเติม',
+                statusWaiting: 'รอคิว',
+                statusSketching: 'ร่างภาพ',
+                statusColoring: 'ลงสี',
+                statusCompleted: 'เสร็จสิ้น'
+            },
+            en: {
+                navPortfolio: '<i class="fa-regular fa-image"></i> Portfolio',
+                navPrices: '<i class="fa-solid fa-file-invoice-dollar"></i> Prices',
+                navQueue: '<i class="fa-regular fa-calendar-check"></i> Queue',
+                navTerms: '<i class="fa-solid fa-file-contract"></i> Terms',
+                navContact: 'Contact Us',
+                heroWelcome: 'Welcome to',
+                heroCalcBtn: 'View Prices',
+                sectionPortfolio: 'Art Portfolio',
+                sectionPrices: 'Commission Rates',
+                sectionQueue: 'Queue Status',
+                tableQueueNo: 'No.',
+                tableQueueName: 'Project/Client',
+                tableQueueDate: 'Delivery Date',
+                tableQueueStatus: 'Status',
+                sectionTerms: 'Terms of Service',
+                sectionContact: 'Contact Channels',
+                noPortfolio: 'No portfolio items yet.',
+                noPrices: 'No prices set yet.',
+                btnHire: 'Commission Me',
+                queueEmpty: 'Queue is open. Feel free to contact!',
+                noTerms: 'No terms specified.',
+                statusWaiting: 'Waiting',
+                statusSketching: 'Sketching',
+                statusColoring: 'Coloring',
+                statusCompleted: 'Completed'
             }
-        }
+        };
 
-        // 2. เรนเดอร์ตารางคิวงาน
-        function renderQueueData() {
-            const tbody = document.getElementById('queue-table-body');
-            if (!tbody) return;
+        function setLanguage(lang) {
+            appState.currentLang = lang;
+            
+            document.getElementById('btn-lang-th').classList.remove('active');
+            document.getElementById('btn-lang-en').classList.remove('active');
+            document.getElementById(`btn-lang-${lang}`).classList.add('active');
 
-            if (appData.queues.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" class="py-4 text-center text-slate-400">ยังไม่มีข้อมูลคิวใน Google Sheets</td></tr>`;
-                return;
-            }
-
-            let html = '';
-            let availableCount = 0;
-
-            appData.queues.forEach((q, idx) => {
-                let badgeClass = 'bg-amber-100 text-amber-700';
-                let statusText = q.status;
-                if (q.status === 'Done') badgeClass = 'bg-emerald-100 text-emerald-700';
-                else if (q.status === 'In Progress') badgeClass = 'bg-sky-100 text-sky-700';
-                else if (q.status === 'Available' || q.status.includes('คิวว่าง')) {
-                    badgeClass = 'bg-emerald-500 text-white font-bold';
-                    statusText = '✨ คิวว่าง';
-                    availableCount++;
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (dict[lang][key]) {
+                    if (el.tagName === 'SPAN' || el.tagName === 'H2' || el.tagName === 'TH') {
+                        el.innerHTML = dict[lang][key];
+                    } else {
+                        if (el.querySelector('i')) {
+                            const iconHtml = el.querySelector('i').outerHTML;
+                            el.innerHTML = iconHtml + ' ' + dict[lang][key].replace(/<i.*<\/i> /, '');
+                        } else {
+                            el.innerHTML = dict[lang][key];
+                        }
+                    }
                 }
-
-                html += `
-                    <tr class="hover:bg-white/40 transition-colors">
-                        <td class="py-3 px-4 font-bold text-pink-600">#${String(idx + 1).padStart(2, '0')}</td>
-                        <td class="py-3 px-4">${q.name}</td>
-                        <td class="py-3 px-4">${q.type}</td>
-                        <td class="py-3 px-4"><span class="px-2.5 py-1 rounded-full text-[10px] font-medium ${badgeClass}">${statusText}</span></td>
-                    </tr>
-                `;
             });
-
-            tbody.innerHTML = html;
-            document.getElementById('stat-total-slots').innerHTML = `${appData.queues.length} <span class="text-sm font-normal text-slate-500">คิว</span>`;
-            document.getElementById('stat-available-slots').innerHTML = `${availableCount} <span class="text-sm font-normal text-slate-500">คิว</span>`;
-            document.getElementById('queue-count-summary').innerText = `ทั้งหมด ${appData.queues.length} คิว`;
+            if(appState.data.settings) renderPublicApp();
         }
 
-        // 3. เรนเดอร์เรทราคา
-        function renderPricingData() {
-            const container = document.getElementById('pricing-container');
-            if (!container) return;
-
-            if (appData.pricing.length === 0) {
-                container.innerHTML = `<div class="glass-card rounded-3xl p-6 text-center text-slate-400 col-span-3">ยังไม่มีข้อมูลเรทราคาใน Google Sheets</div>`;
-                return;
+        function showLoading(show) {
+            const overlay = document.getElementById('loading-overlay');
+            if (show) {
+                overlay.classList.remove('hidden');
+                void overlay.offsetWidth;
+                overlay.style.opacity = '1';
+            } else {
+                overlay.style.opacity = '0';
+                setTimeout(() => overlay.classList.add('hidden'), 500);
             }
-
-            let html = '';
-            appData.pricing.forEach((p) => {
-                html += `
-                    <div class="glass-card rounded-3xl p-6 flex flex-col justify-between border-2 border-white/90 shadow-md relative overflow-hidden bg-white/70">
-                        <div class="absolute top-0 right-0 bg-pink-300 text-pink-800 px-4 py-1 rounded-bl-2xl text-[11px] font-bold">${p.tag || 'Package'}</div>
-                        <div>
-                            <div class="w-12 h-12 rounded-2xl bg-pink-100 flex items-center justify-center text-xl mb-4 shadow-sm text-pink-600">
-                                <i class="fa-solid fa-tag"></i>
-                            </div>
-                            <h4 class="text-lg font-bold text-slate-800 mb-1">${p.title}</h4>
-                            <p class="text-xs text-slate-500 mb-4">${p.desc}</p>
-                            <div class="text-3xl font-extrabold text-pink-600 mb-4">${p.price}</div>
-                        </div>
-                        <button onclick="switchTab('contact')" class="w-full py-2.5 rounded-2xl bg-gradient-to-r from-pink-400 to-pink-500 text-white font-semibold text-xs shadow-sm hover:opacity-90 transition-all">
-                            จ้างงานเรทนี้
-                        </button>
-                    </div>
-                `;
-            });
-            container.innerHTML = html;
         }
 
-        // 4. ฟังก์ชันส่งข้อมูลบรีฟเข้าชีต
-        async function submitBriefToSheet() {
-            const name = document.getElementById('brief-name').value.trim();
-            const type = document.getElementById('brief-type').value;
-            const details = document.getElementById('brief-details').value.trim();
-            const statusEl = document.getElementById('submit-status');
+        function showModal(title, message, type = 'info', onConfirm = null) {
+            const dialog = document.getElementById('custom-dialog');
+            const dTitle = document.getElementById('dialog-title');
+            const dMsg = document.getElementById('dialog-message');
+            const dIcon = document.getElementById('dialog-icon');
+            const dBtns = document.getElementById('dialog-buttons');
 
-            if (!name) {
-                alert('กรุณากรอกชื่อเล่นลูกค้าก่อนส่งบรีฟค่ะ');
-                return;
+            dTitle.textContent = title;
+            dMsg.textContent = message;
+            dBtns.innerHTML = '';
+
+            if (type === 'error') {
+                dIcon.innerHTML = '<i class="fa-solid fa-circle-xmark text-red-400"></i>';
+                dBtns.innerHTML = `<button onclick="closeModal()" class="neu-btn px-6 py-2">ปิด</button>`;
+            } else if (type === 'confirm') {
+                dIcon.innerHTML = '<i class="fa-solid fa-circle-question text-blue-400"></i>';
+                dBtns.innerHTML = `
+                    <button onclick="closeModal()" class="neu-btn px-6 py-2">ยกเลิก</button>
+                    <button id="modal-confirm-btn" class="neu-btn px-6 py-2 !bg-[var(--text-accent)] text-white">ตกลง</button>
+                `;
+                document.getElementById('modal-confirm-btn').onclick = () => { if (onConfirm) onConfirm(); closeModal(); };
+            } else if (type === 'prompt') {
+                 dIcon.innerHTML = '<i class="fa-solid fa-lock text-gray-500"></i>';
+                 dMsg.innerHTML = `
+                    <input type="email" id="modal-prompt-email" class="w-full neu-pressed px-4 py-2 mb-2 outline-none text-center bg-white/50" placeholder="อีเมล">
+                    <input type="password" id="modal-prompt-password" class="w-full neu-pressed px-4 py-2 mb-4 outline-none text-center bg-white/50" placeholder="รหัสผ่าน">
+                 `;
+                 dBtns.innerHTML = `
+                    <button onclick="closeModal()" class="neu-btn px-6 py-2">ยกเลิก</button>
+                    <button id="modal-prompt-btn" class="neu-btn px-6 py-2 !bg-[var(--text-accent)] text-white flex items-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบ
+                    </button>
+                 `;
+                 document.getElementById('modal-prompt-btn').onclick = () => { 
+                     const email = document.getElementById('modal-prompt-email').value;
+                     const pwd = document.getElementById('modal-prompt-password').value;
+                     if (onConfirm) onConfirm(email, pwd); 
+                 };
+            } else {
+                dIcon.innerHTML = '<i class="fa-solid fa-circle-check text-green-400"></i>';
+                dBtns.innerHTML = `<button onclick="closeModal()" class="neu-btn px-6 py-2">ตกลง</button>`;
             }
 
-            statusEl.innerText = 'กำลังส่งข้อมูลเข้า Google Sheets...';
-            statusEl.className = 'text-xs text-sky-600 font-semibold opacity-100';
+            dialog.classList.remove('hidden');
+            dialog.classList.add('flex');
+        }
 
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: 'POST',
-                    mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ action: 'saveBrief', name, type, details })
+        function closeModal() {
+            const dialog = document.getElementById('custom-dialog');
+            dialog.classList.add('hidden');
+            dialog.classList.remove('flex');
+        }
+
+        function setButtonLoading(buttonId, isLoading, originalHtml) {
+            const btn = document.getElementById(buttonId);
+            if (!btn) return;
+            if (isLoading) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> กำลังดำเนินการ...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = originalHtml;
+            }
+        }
+
+        async function compressImage(file) {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        const MAX_SIZE = 1000;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; }
+                        } else {
+                            if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        canvas.toBlob((blob) => {
+                            resolve(blob);
+                        }, 'image/jpeg', 0.8);
+                    }
+                }
+            });
+        }
+
+        async function uploadFileToSupabase(file, bucketName) {
+            const compressedBlob = await compressImage(file);
+            const fileName = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}.jpg`;
+            const filePath = `${fileName}`;
+
+            const { data, error } = await supabaseClient.storage
+                .from(bucketName)
+                .upload(filePath, compressedBlob, {
+                    contentType: 'image/jpeg',
+                    upsert: false
                 });
 
-                statusEl.innerHTML = '<i class="fa-solid fa-circle-check mr-1"></i> ส่งบรีฟเข้า Google Sheets สำเร็จแล้ว!';
-                statusEl.className = 'text-xs text-emerald-600 font-semibold opacity-100';
+            if (error) {
+                console.warn("Storage upload failed, falling back to base64 data URL:", error.message);
+                return new Promise((resolve) => {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(compressedBlob);
+                    reader.onload = (e) => resolve(e.target.result);
+                });
+            }
+
+            const { data: { publicUrl } } = supabaseClient.storage
+                .from(bucketName)
+                .getPublicUrl(filePath);
+
+            return publicUrl;
+        }
+
+        async function fetchInitialData() {
+            showLoading(true);
+            try {
+                const { data: settingsData, error: settingsError } = await supabaseClient
+                    .from('settings')
+                    .select('*')
+                    .eq('id', 1)
+                    .single();
+                if (settingsError && settingsError.code !== 'PGRST116') throw settingsError;
                 
-                document.getElementById('brief-name').value = '';
-                document.getElementById('brief-details').value = '';
+                appState.data.settings = settingsData || {
+                    site_name: "MOOJI O JI",
+                    tagline_th: "พอร์ตโฟลิโอและอัตราค่าบริการ สามารถตรวจสอบรายละเอียดและข้อตกลงเบื้องต้นได้ที่นี่ค่ะ ยินดีให้บริการนะคะ",
+                    tagline_en: "Portfolio and commission rates. Glad to be of service!",
+                    status_th: "เปิดรับงาน (Commissions Open)",
+                    status_en: "Commissions Open",
+                    contact_fb: "", contact_line: "", contact_ig: "", contact_email: ""
+                };
+
+                const { data: portData, error: portError } = await supabaseClient
+                    .from('portfolios')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (portError) throw portError;
+                appState.data.portfolio = portData || [];
+
+                const { data: pricesData, error: pricesError } = await supabaseClient
+                    .from('prices')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+                if (pricesError) throw pricesError;
+                appState.data.prices = pricesData || [];
+
+                const { data: queueData, error: queueError } = await supabaseClient
+                    .from('queues')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+                if (queueError) throw queueError;
+                appState.data.queue = queueData || [];
+
+                const { data: termsData, error: termsError } = await supabaseClient
+                    .from('terms')
+                    .select('*')
+                    .order('created_at', { ascending: true });
+                if (termsError) throw termsError;
+                appState.data.terms = termsData || [];
+
+                setLanguage(appState.currentLang);
             } catch (error) {
-                statusEl.innerHTML = '<i class="fa-solid fa-circle-xmark mr-1"></i> เกิดข้อผิดพลาดในการส่งข้อมูล';
-                statusEl.className = 'text-xs text-red-500 font-semibold opacity-100';
+                console.error("Error fetching data:", error);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถดึงข้อมูลจากเซิร์ฟเวอร์ได้\n' + error.message, 'error');
+            } finally {
+                showLoading(false);
             }
         }
 
-        // Tab Switching
-        function switchTab(tabId) {
-            document.querySelectorAll('.content-section').forEach(sec => sec.classList.add('hidden'));
-            const target = document.getElementById('section-' + tabId);
-            if (target) target.classList.remove('hidden');
-
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 text-slate-600 hover:text-pink-600 hover:bg-white/40";
-            });
-            const activeBtn = document.getElementById('nav-' + tabId);
-            if (activeBtn) activeBtn.className = "nav-btn px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 bg-white text-pink-600 shadow-sm";
-
-            const mainContainer = document.querySelector('main');
-            if (mainContainer) mainContainer.scrollTop = 0;
+        function getQueueStatusBadge(statusKey, lang) {
+            const t = dict[lang];
+            let label = '', dotClass = '';
+            switch(statusKey) {
+                case 'waiting': label = t.statusWaiting; dotClass = 'status-waiting'; break;
+                case 'sketching': label = t.statusSketching; dotClass = 'status-sketching'; break;
+                case 'coloring': label = t.statusColoring; dotClass = 'status-coloring'; break;
+                case 'completed': label = t.statusCompleted; dotClass = 'status-completed'; break;
+                default: label = statusKey; dotClass = 'status-waiting';
+            }
+            return `<div class="inline-flex items-center gap-2 px-3 py-1 bg-white/40 rounded-full shadow-sm text-sm font-medium"><div class="status-dot ${dotClass}"></div> ${label}</div>`;
+        }
+        
+        function escapeHtml(unsafe) {
+            if (unsafe == null) return '';
+            return unsafe
+                 .toString()
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
         }
 
-        // โหลดข้อมูลเมื่อเปิดหน้าเว็บ
-        fetchGoogleSheetData();
+        function renderPublicApp() {
+            const d = appState.data;
+            if(!d.settings) return;
+            const lang = appState.currentLang;
+            const t = dict[lang];
+
+            const siteNameSafe = escapeHtml(d.settings.site_name);
+            document.title = siteNameSafe + " - Portfolio";
+            document.getElementById('nav-brand').textContent = siteNameSafe;
+            document.getElementById('hero-title').textContent = siteNameSafe;
+            document.getElementById('footer-brand').textContent = siteNameSafe;
+            
+            document.getElementById('hero-tagline').textContent = lang === 'en' ? d.settings.tagline_en : d.settings.tagline_th;
+            document.getElementById('hero-status').textContent = lang === 'en' ? d.settings.status_en : d.settings.status_th;
+
+            const portGrid = document.getElementById('public-portfolio-grid');
+            portGrid.innerHTML = d.portfolio.map(p => `
+                <div class="neu-flat p-2 rounded-3xl overflow-hidden group cursor-pointer hover:scale-[1.02] transition-transform reveal">
+                    <i class="fa-solid fa-star corner-icon tr text-yellow-300 text-2xl group-hover:rotate-45 transition-transform" style="animation-delay: 0.2s"></i>
+                    <div class="rounded-2xl overflow-hidden relative aspect-[3/4]">
+                        <img src="${escapeHtml(p.image_url)}" alt="Portfolio item" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" onerror="this.src='https://placehold.co/400x600?text=Error'">
+                        <div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                            <span class="text-white font-medium px-4 text-center tracking-wide text-lg drop-shadow-md">${escapeHtml(lang === 'en' ? p.title_en : p.title_th)}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('') || `<p class="text-center col-span-full py-10 text-[var(--text-muted)]">${t.noPortfolio}</p>`;
+
+            const pricesGrid = document.getElementById('public-prices-grid');
+            pricesGrid.innerHTML = d.prices.map(p => `
+                <div class="neu-flat relative overflow-hidden group hover:scale-[1.01] transition-transform reveal">
+                    <i class="fa-solid fa-ribbon corner-icon tl text-pink-400 text-4xl group-hover:-rotate-12 transition-transform" style="animation-delay: 0.4s"></i>
+                    ${p.image_url ? `<div class="w-full h-48 overflow-hidden rounded-t-[26px]"><img src="${escapeHtml(p.image_url)}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="this.style.display='none'"></div>` : ''}
+                    <div class="p-8">
+                        <div class="absolute -right-8 top-20 text-8xl opacity-[0.03] group-hover:scale-110 group-hover:rotate-12 transition-all duration-500">
+                            <i class="fa-solid fa-paintbrush"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-[var(--text-main)] mb-2">${escapeHtml(lang === 'en' ? p.name_en : p.name_th)}</h3>
+                        <div class="text-3xl font-bold text-[var(--text-accent)] mb-5">${escapeHtml(p.price_text)}</div>
+                        <ul class="space-y-3 text-sm text-[var(--text-main)] font-medium">
+                            ${(lang === 'en' ? (p.details_en || '') : (p.details_th || '')).split(',').filter(detail => detail.trim() !== '').map(detail => `
+                                <li class="flex items-start gap-2">
+                                    <i class="fa-solid fa-check text-green-400 mt-1 drop-shadow-sm"></i>
+                                    <span>${escapeHtml(detail.trim())}</span>
+                                </li>
+                            `).join('')}
+                        </ul>
+                        <a href="#contact" class="mt-8 inline-block neu-btn px-6 py-3 text-sm font-bold w-full text-center hover:bg-[var(--text-accent)] hover:text-white hover-wiggle">${t.btnHire}</a>
+                    </div>
+                </div>
+            `).join('') || `<p class="text-center col-span-full py-10 text-[var(--text-muted)]">${t.noPrices}</p>`;
+
+            const queueSection = document.getElementById('queue');
+            if(!queueSection.classList.contains('reveal')) queueSection.classList.add('reveal');
+
+            const queueList = document.getElementById('public-queue-list');
+            queueList.innerHTML = d.queue.map((q, i) => `
+                <tr class="border-b border-white/70 hover:bg-white/50 transition-colors">
+                    <td class="py-4 px-2 text-[var(--text-muted)] font-medium">#${i + 1}</td>
+                    <td class="py-4 px-2 font-medium text-[var(--text-main)]">${escapeHtml(q.customer_name)}</td>
+                    <td class="py-4 px-2 text-sm font-medium text-[var(--text-muted)]">${escapeHtml(q.delivery_date || '-')}</td>
+                    <td class="py-4 px-2">
+                        ${getQueueStatusBadge(q.status, lang)}
+                    </td>
+                </tr>
+            `).join('') || `<tr><td colspan="4" class="text-center py-6 text-[var(--text-muted)]">${t.queueEmpty}</td></tr>`;
+
+            const termsSection = document.getElementById('terms');
+            if(!termsSection.classList.contains('reveal')) termsSection.classList.add('reveal');
+
+            const termsList = document.getElementById('public-terms-list');
+            termsList.innerHTML = d.terms.map(term => `
+                <li class="flex items-start gap-3 p-4 bg-white/40 rounded-2xl hover:bg-white/70 transition-colors hover:-translate-y-1 duration-300">
+                    <i class="fa-solid fa-star text-[var(--text-accent)] text-xs mt-1.5 drop-shadow-sm"></i>
+                    <span class="font-medium">${escapeHtml(lang === 'en' ? term.text_en : term.text_th)}</span>
+                </li>
+            `).join('') || `<li>${t.noTerms}</li>`;
+
+            const contactsDiv = document.getElementById('public-contacts');
+            const socials = [
+                { id: 'fb', icon: 'fa-brands fa-facebook', label: 'Facebook', url: d.settings.contact_fb, color: 'text-blue-500' },
+                { id: 'line', icon: 'fa-brands fa-line', label: 'LINE', url: d.settings.contact_line, color: 'text-green-500' },
+                { id: 'ig', icon: 'fa-brands fa-instagram', label: 'Instagram', url: d.settings.contact_ig, color: 'text-pink-500' },
+                { id: 'email', icon: 'fa-solid fa-envelope', label: 'Email', url: d.settings.contact_email ? `mailto:${d.settings.contact_email}` : null, color: 'text-gray-500' }
+            ];
+
+            contactsDiv.innerHTML = socials.filter(s => s.url).map(s => `
+                <a href="${escapeHtml(s.url)}" target="_blank" class="neu-btn flex flex-col items-center justify-center w-28 h-28 hover:-translate-y-3 hover:scale-110 transition-all duration-300 reveal group">
+                    <i class="${s.icon} text-4xl ${s.color} mb-3 drop-shadow-md group-hover:scale-110 transition-transform"></i>
+                    <span class="text-xs font-bold text-[var(--text-main)] group-hover:text-[var(--text-accent)]">${s.label}</span>
+                </a>
+            `).join('');
+            
+            setTimeout(initScrollAnimations, 100);
+        }
+
+        async function promptAdminLogin() {
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            if (session) {
+                checkAdminAccess();
+                return;
+            }
+
+            showModal('Admin Login', 'กรุณาเข้าสู่ระบบด้วยบัญชีแอดมิน', 'prompt', async (email, pwd) => {
+                if (!email || !pwd) {
+                    showModal('แจ้งเตือน', 'กรุณากรอกอีเมลและรหัสผ่าน', 'error');
+                    return;
+                }
+                
+                showLoading(true);
+                closeModal();
+                const btnOriginalHtml = document.getElementById('login-btn').innerHTML;
+                setButtonLoading('login-btn', true, btnOriginalHtml);
+
+                try {
+                    const { data, error } = await supabaseClient.auth.signInWithPassword({
+                        email: email,
+                        password: pwd,
+                    });
+
+                    if (error) throw error;
+                    
+                    checkAdminAccess();
+
+                } catch (error) {
+                    console.error("Login error:", error.message);
+                    showModal('เข้าสู่ระบบล้มเหลว', 'อีเมลหรือรหัสผ่านไม่ถูกต้อง\n' + error.message, 'error');
+                } finally {
+                    showLoading(false);
+                    setButtonLoading('login-btn', false, btnOriginalHtml);
+                }
+            });
+        }
+        
+        async function checkAdminAccess() {
+            showLoading(true);
+            try {
+                const { data: isAdmin, error } = await supabaseClient.rpc('is_admin');
+                if (error) throw error;
+                
+                if (isAdmin) {
+                    appState.isAdmin = true;
+                    document.getElementById('public-view').style.display = 'none';
+                    document.getElementById('admin-panel').style.display = 'flex';
+                    renderAdminApp();
+                } else {
+                    await supabaseClient.auth.signOut();
+                    showModal('ไม่มีสิทธิ์เข้าถึง', 'บัญชีนี้ไม่ใช่แอดมินของร้าน', 'error');
+                }
+            } catch (error) {
+                console.error("Admin check error:", error.message);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถตรวจสอบสิทธิ์แอดมินได้\n' + error.message, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function logoutAdmin() {
+            showLoading(true);
+            try {
+                await supabaseClient.auth.signOut();
+                appState.isAdmin = false;
+                document.getElementById('public-view').style.display = 'block';
+                document.getElementById('admin-panel').style.display = 'none';
+                window.scrollTo(0,0);
+            } catch (error) {
+                console.error("Logout error:", error);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        function renderAdminApp() {
+            const s = appState.data.settings;
+            if(!s) return;
+
+            document.getElementById('edit-site-name').value = s.site_name || '';
+            document.getElementById('edit-status-th').value = s.status_th || '';
+            document.getElementById('edit-status-en').value = s.status_en || '';
+            document.getElementById('edit-tagline-th').value = s.tagline_th || '';
+            document.getElementById('edit-tagline-en').value = s.tagline_en || '';
+
+            document.getElementById('edit-fb').value = s.contact_fb || '';
+            document.getElementById('edit-line').value = s.contact_line || '';
+            document.getElementById('edit-ig').value = s.contact_ig || '';
+            document.getElementById('edit-email').value = s.contact_email || '';
+
+            renderAdminPortfolio();
+            renderAdminPrices();
+            renderAdminQueue();
+            renderAdminTerms();
+        }
+
+        async function saveSettings() {
+            if(!appState.isAdmin) return;
+            const btnOriginal = document.getElementById('btn-save-settings').innerHTML;
+            setButtonLoading('btn-save-settings', true, btnOriginal);
+            
+            const updates = {
+                site_name: document.getElementById('edit-site-name').value,
+                status_th: document.getElementById('edit-status-th').value,
+                status_en: document.getElementById('edit-status-en').value,
+                tagline_th: document.getElementById('edit-tagline-th').value,
+                tagline_en: document.getElementById('edit-tagline-en').value
+            };
+
+            try {
+                const { error } = await supabaseClient.from('settings').update(updates).eq('id', 1);
+                if (error) throw error;
+                
+                appState.data.settings = { ...appState.data.settings, ...updates };
+                showModal('บันทึกสำเร็จ', 'อัปเดตตั้งค่าทั่วไปแล้ว', 'info');
+                renderPublicApp();
+            } catch (error) {
+                console.error("Save settings error:", error.message);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-save-settings', false, btnOriginal);
+            }
+        }
+
+        async function saveContacts() {
+            if(!appState.isAdmin) return;
+            const btnOriginal = document.getElementById('btn-save-contacts').innerHTML;
+            setButtonLoading('btn-save-contacts', true, btnOriginal);
+
+            const updates = {
+                contact_fb: document.getElementById('edit-fb').value,
+                contact_line: document.getElementById('edit-line').value,
+                contact_ig: document.getElementById('edit-ig').value,
+                contact_email: document.getElementById('edit-email').value
+            };
+
+            try {
+                const { error } = await supabaseClient.from('settings').update(updates).eq('id', 1);
+                if (error) throw error;
+                
+                appState.data.settings = { ...appState.data.settings, ...updates };
+                showModal('บันทึกสำเร็จ', 'อัปเดตช่องทางติดต่อแล้ว', 'info');
+                renderPublicApp();
+            } catch (error) {
+                 console.error("Save contacts error:", error.message);
+                 showModal('เกิดข้อผิดพลาด', 'ไม่สามารถบันทึกได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-save-contacts', false, btnOriginal);
+            }
+        }
+
+        function renderAdminPortfolio() {
+            const list = document.getElementById('admin-portfolio-list');
+            list.innerHTML = appState.data.portfolio.map(p => `
+                <div class="bg-gray-50 border border-gray-200 p-2 rounded-2xl relative group">
+                    <img src="${escapeHtml(p.image_url)}" class="w-full h-32 object-cover rounded-xl mb-2" onerror="this.src='https://placehold.co/400x600?text=Error'">
+                    <p class="text-sm font-bold truncate px-1 text-gray-700">TH: ${escapeHtml(p.title_th)}</p>
+                    <p class="text-xs truncate px-1 text-gray-500">EN: ${escapeHtml(p.title_en)}</p>
+                    <button onclick="deletePortfolio('${p.id}')" class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                        <i class="fa-solid fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('') || '<p class="text-gray-400 text-sm col-span-full">ยังไม่มีผลงาน</p>';
+        }
+
+        async function addPortfolioItem() {
+            const fileInput = document.getElementById('port-img-file');
+            const th = document.getElementById('port-title-th').value;
+            const en = document.getElementById('port-title-en').value;
+            
+            if (!fileInput.files[0] || !th || !en) {
+                return showModal('แจ้งเตือน', 'กรุณาเลือกรูปภาพและใส่ชื่อผลงานให้ครบ 2 ภาษา', 'error');
+            }
+            
+            const btnOriginal = document.getElementById('btn-add-portfolio').innerHTML;
+            setButtonLoading('btn-add-portfolio', true, btnOriginal);
+
+            try {
+                const publicUrl = await uploadFileToSupabase(fileInput.files[0], 'portfolios');
+                
+                const newItem = { image_url: publicUrl, title_th: th, title_en: en };
+                const { data, error } = await supabaseClient.from('portfolios').insert([newItem]).select();
+                if (error) throw error;
+                
+                appState.data.portfolio.unshift(data[0]);
+                renderAdminPortfolio();
+                renderPublicApp();
+                
+                fileInput.value = '';
+                document.getElementById('port-title-th').value = '';
+                document.getElementById('port-title-en').value = '';
+                showModal('สำเร็จ', 'อัปโหลดและเพิ่มผลงานเรียบร้อย', 'info');
+            } catch (error) {
+                console.error("Add portfolio error:", error);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถอัปโหลดรูปหรือเพิ่มผลงานได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-add-portfolio', false, btnOriginal);
+            }
+        }
+
+        function deletePortfolio(id) {
+            showModal('ยืนยันการลบ', 'ต้องการลบผลงานนี้ใช่หรือไม่?', 'confirm', async () => {
+                showLoading(true);
+                try {
+                    const { error } = await supabaseClient.from('portfolios').delete().eq('id', id);
+                    if (error) throw error;
+                    
+                    appState.data.portfolio = appState.data.portfolio.filter(p => p.id !== id);
+                    renderAdminPortfolio();
+                    renderPublicApp();
+                } catch (error) {
+                    console.error("Delete portfolio error:", error.message);
+                    showModal('เกิดข้อผิดพลาด', 'ลบผลงานไม่สำเร็จ\n' + error.message, 'error');
+                } finally {
+                    showLoading(false);
+                }
+            });
+        }
+
+        function renderAdminPrices() {
+            const list = document.getElementById('admin-prices-list');
+            list.innerHTML = appState.data.prices.map(p => `
+                <div class="bg-gray-50 border border-gray-200 flex flex-col md:flex-row justify-between items-center p-4 rounded-xl gap-4">
+                    <div class="flex items-center gap-4 w-full">
+                        ${p.image_url ? `<img src="${escapeHtml(p.image_url)}" class="w-20 h-20 object-cover rounded-lg shadow-sm flex-shrink-0" onerror="this.style.display='none'">` : `<div class="w-20 h-20 bg-gray-200 rounded-lg flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-image text-gray-400"></i></div>`}
+                        <div class="flex-grow">
+                            <h4 class="font-bold text-gray-800">${escapeHtml(p.name_th)} / ${escapeHtml(p.name_en)} <span class="text-pink-500 ml-2">${escapeHtml(p.price_text)}</span></h4>
+                            <p class="text-xs text-gray-500 truncate mt-1">TH: ${escapeHtml(p.details_th)}</p>
+                            <p class="text-xs text-gray-500 truncate">EN: ${escapeHtml(p.details_en)}</p>
+                        </div>
+                    </div>
+                    <button onclick="deletePrice('${p.id}')" class="text-red-500 hover:bg-red-50 p-3 rounded-lg flex-shrink-0 transition-colors"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('') || '<p class="text-gray-400 text-sm">ยังไม่มีบริการ</p>';
+        }
+
+        async function addPriceItem() {
+            const fileInput = document.getElementById('price-img-file');
+            const nameTh = document.getElementById('price-name-th').value;
+            const nameEn = document.getElementById('price-name-en').value;
+            const amt = document.getElementById('price-amt').value;
+            const descTh = document.getElementById('price-desc-th').value;
+            const descEn = document.getElementById('price-desc-en').value;
+            
+            if (!nameTh || !nameEn || !amt) {
+                return showModal('แจ้งเตือน', 'กรุณากรอกชื่อบริการทั้ง 2 ภาษา และราคา', 'error');
+            }
+
+            const btnOriginal = document.getElementById('btn-add-price').innerHTML;
+            setButtonLoading('btn-add-price', true, btnOriginal);
+
+            try {
+                let imageUrl = null;
+                if (fileInput.files[0]) {
+                    imageUrl = await uploadFileToSupabase(fileInput.files[0], 'prices');
+                }
+
+                const newItem = {
+                    image_url: imageUrl,
+                    name_th: nameTh,
+                    name_en: nameEn,
+                    price_text: amt,
+                    details_th: descTh || null,
+                    details_en: descEn || null
+                };
+
+                const { data, error } = await supabaseClient.from('prices').insert([newItem]).select();
+                if (error) throw error;
+                
+                appState.data.prices.push(data[0]);
+                renderAdminPrices();
+                renderPublicApp();
+                
+                fileInput.value = '';
+                document.getElementById('price-name-th').value = '';
+                document.getElementById('price-name-en').value = '';
+                document.getElementById('price-amt').value = '';
+                document.getElementById('price-desc-th').value = '';
+                document.getElementById('price-desc-en').value = '';
+                
+                showModal('สำเร็จ', 'เพิ่มรายการราคาเรียบร้อย', 'info');
+            } catch (error) {
+                console.error("Add price error:", error);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มราคาได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-add-price', false, btnOriginal);
+            }
+        }
+
+        function deletePrice(id) {
+            showModal('ยืนยันการลบ', 'ต้องการลบรายการราคานี้ใช่หรือไม่?', 'confirm', async () => {
+                showLoading(true);
+                try {
+                    const { error } = await supabaseClient.from('prices').delete().eq('id', id);
+                    if (error) throw error;
+                    
+                    appState.data.prices = appState.data.prices.filter(p => p.id !== id);
+                    renderAdminPrices();
+                    renderPublicApp();
+                } catch (error) {
+                    console.error("Delete price error:", error.message);
+                    showModal('เกิดข้อผิดพลาด', 'ลบรายการไม่สำเร็จ\n' + error.message, 'error');
+                } finally {
+                    showLoading(false);
+                }
+            });
+        }
+
+        function renderAdminQueue() {
+            const list = document.getElementById('admin-queue-list');
+            list.innerHTML = appState.data.queue.map(q => `
+                <tr class="border-b border-gray-100">
+                    <td class="py-3 font-medium text-gray-700">
+                        ${escapeHtml(q.customer_name)}
+                        <div class="text-xs text-gray-400 mt-1 font-normal"><i class="fa-regular fa-clock"></i> ส่ง: ${escapeHtml(q.delivery_date || '-')}</div>
+                    </td>
+                    <td class="py-3">
+                        <select onchange="updateQueueStatus('${q.id}', this.value)" class="bg-gray-100 border border-gray-200 px-3 py-1.5 text-sm rounded-lg outline-none focus:ring-2 focus:ring-pink-300">
+                            <option value="waiting" ${q.status === 'waiting' ? 'selected' : ''}>รอคิว (Waiting)</option>
+                            <option value="sketching" ${q.status === 'sketching' ? 'selected' : ''}>ร่างภาพ (Sketching)</option>
+                            <option value="coloring" ${q.status === 'coloring' ? 'selected' : ''}>ลงสี (Coloring)</option>
+                            <option value="completed" ${q.status === 'completed' ? 'selected' : ''}>เสร็จสิ้น (Completed)</option>
+                        </select>
+                    </td>
+                    <td class="py-3 text-right">
+                        <button onclick="deleteQueue('${q.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg"><i class="fa-solid fa-trash"></i></button>
+                    </td>
+                </tr>
+            `).join('') || '<tr><td colspan="3" class="text-center py-4 text-gray-400 text-sm">ไม่มีคิวงาน</td></tr>';
+        }
+
+        async function addQueueItem() {
+            const name = document.getElementById('queue-name-input').value;
+            const date = document.getElementById('queue-date-input').value;
+            const status = document.getElementById('queue-status-input').value;
+            
+            if (!name) return showModal('แจ้งเตือน', 'กรุณากรอกชื่อลูกค้า', 'error');
+
+            const btnOriginal = document.getElementById('btn-add-queue').innerHTML;
+            setButtonLoading('btn-add-queue', true, btnOriginal);
+
+            const newItem = { customer_name: name, delivery_date: date || 'TBA', status: status };
+
+            try {
+                const { data, error } = await supabaseClient.from('queues').insert([newItem]).select();
+                if (error) throw error;
+
+                appState.data.queue.push(data[0]);
+                renderAdminQueue();
+                renderPublicApp();
+                document.getElementById('queue-name-input').value = '';
+                document.getElementById('queue-date-input').value = '';
+            } catch (error) {
+                 console.error("Add queue error:", error.message);
+                 showModal('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มคิวได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-add-queue', false, btnOriginal);
+            }
+        }
+
+        async function updateQueueStatus(id, newStatus) {
+            try {
+                const { error } = await supabaseClient.from('queues').update({ status: newStatus }).eq('id', id);
+                if (error) throw error;
+                
+                const q = appState.data.queue.find(q => q.id === id);
+                if(q) q.status = newStatus;
+                renderPublicApp();
+            } catch (error) {
+                console.error("Update queue status error:", error.message);
+                showModal('เกิดข้อผิดพลาด', 'อัปเดตสถานะไม่สำเร็จ\n' + error.message, 'error');
+                renderAdminQueue();
+            }
+        }
+
+        function deleteQueue(id) {
+             showModal('ยืนยันการลบ', 'ต้องการลบคิวนี้ใช่หรือไม่?', 'confirm', async () => {
+                 showLoading(true);
+                 try {
+                     const { error } = await supabaseClient.from('queues').delete().eq('id', id);
+                     if (error) throw error;
+
+                     appState.data.queue = appState.data.queue.filter(q => q.id !== id);
+                     renderAdminQueue();
+                     renderPublicApp();
+                 } catch (error) {
+                     console.error("Delete queue error:", error.message);
+                     showModal('เกิดข้อผิดพลาด', 'ลบคิวไม่สำเร็จ\n' + error.message, 'error');
+                 } finally {
+                     showLoading(false);
+                 }
+            });
+        }
+
+        function renderAdminTerms() {
+            const list = document.getElementById('admin-terms-list');
+            list.innerHTML = appState.data.terms.map(t => `
+                <li class="bg-gray-50 border border-gray-200 p-4 rounded-xl flex justify-between items-center gap-4">
+                    <div class="flex-grow">
+                        <p class="text-sm font-bold text-gray-700">TH: ${escapeHtml(t.text_th)}</p>
+                        <p class="text-xs text-gray-500 mt-1">EN: ${escapeHtml(t.text_en)}</p>
+                    </div>
+                    <button onclick="deleteTerm('${t.id}')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg flex-shrink-0"><i class="fa-solid fa-trash"></i></button>
+                </li>
+            `).join('') || '<p class="text-gray-400 text-sm">ไม่มีกฎ</p>';
+        }
+
+        async function addTerm() {
+            const th = document.getElementById('term-input-th').value;
+            const en = document.getElementById('term-input-en').value;
+            if (!th || !en) return showModal('แจ้งเตือน', 'กรุณากรอกกฎให้ครบทั้ง 2 ภาษา', 'error');
+            
+            const btnOriginal = document.getElementById('btn-add-term').innerHTML;
+            setButtonLoading('btn-add-term', true, btnOriginal);
+
+            const newItem = { text_th: th, text_en: en };
+
+            try {
+                const { data, error } = await supabaseClient.from('terms').insert([newItem]).select();
+                if (error) throw error;
+                
+                appState.data.terms.push(data[0]);
+                renderAdminTerms();
+                renderPublicApp();
+                document.getElementById('term-input-th').value = '';
+                document.getElementById('term-input-en').value = '';
+            } catch (error) {
+                console.error("Add term error:", error.message);
+                showModal('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มกฎได้\n' + error.message, 'error');
+            } finally {
+                setButtonLoading('btn-add-term', false, btnOriginal);
+            }
+        }
+
+        function deleteTerm(id) {
+             showModal('ยืนยันการลบ', 'ต้องการลบกฎข้อนี้ใช่หรือไม่?', 'confirm', async () => {
+                 showLoading(true);
+                 try {
+                     const { error } = await supabaseClient.from('terms').delete().eq('id', id);
+                     if (error) throw error;
+
+                     appState.data.terms = appState.data.terms.filter(t => t.id !== id);
+                     renderAdminTerms();
+                     renderPublicApp();
+                 } catch (error) {
+                     console.error("Delete term error:", error.message);
+                     showModal('เกิดข้อผิดพลาด', 'ลบกฎไม่สำเร็จ\n' + error.message, 'error');
+                 } finally {
+                     showLoading(false);
+                 }
+            });
+        }
+
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            
+            document.querySelectorAll('.admin-tab-btn').forEach(btn => {
+                btn.classList.remove('bg-pink-50', 'text-[var(--text-accent)]', 'font-medium', 'active-tab');
+                btn.classList.add('hover:bg-gray-50', 'text-gray-600');
+            });
+            
+            const activeBtn = event.currentTarget || document.querySelector(`.admin-tab-btn[onclick="switchAdminTab('${tabId}')"]`);
+            if(activeBtn) {
+                activeBtn.classList.remove('hover:bg-gray-50', 'text-gray-600');
+                activeBtn.classList.add('bg-pink-50', 'text-[var(--text-accent)]', 'font-medium', 'active-tab');
+            }
+
+            const titles = {
+                'settings': 'ตั้งค่าทั่วไป', 'portfolio': 'จัดการผลงาน', 'prices': 'จัดการเรทราคา',
+                'queue': 'จัดการคิวงาน', 'terms': 'จัดการกฎการใช้งาน', 'contacts': 'ช่องทางติดต่อ'
+            };
+            document.getElementById('admin-page-title').textContent = titles[tabId];
+        }
+
+        function initScrollAnimations() {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.1, rootMargin: "0px 0px -50px 0px" });
+
+            reveals.forEach(reveal => observer.observe(reveal));
+        }
+
+        window.onload = () => {
+            fetchInitialData();
+            
+            document.getElementById('public-view').style.display = 'block';
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    if(targetId && document.querySelector(targetId)) {
+                        document.querySelector(targetId).scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            supabaseClient.auth.getSession().then(({ data: { session } }) => {
+                if (session) {
+                    // Check if already authenticated
+                }
+            });
+        };
     </script>
 </body>
 </html>
